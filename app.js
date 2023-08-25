@@ -53,4 +53,45 @@ class ProductManager {
   }
 }
 
-module.exports = ProductManager;
+// Crear una instancia de ProductManager, pasando la ruta del archivo
+const productManager = new ProductManager("products.json"); // Asegúrate de tener un archivo llamado "products.json"
+
+productManager.addProduct({
+  title: "Remera Oversize",
+  description: "Negra",
+  price: 8900,
+  thumbnail:
+    "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166527/zwr9mfqcbmfazgeywwmk.jpg",
+  code: "REME01",
+  stock: 10,
+});
+
+productManager.addProduct({
+  title: "Remera Oversize",
+  description: "Blanca",
+  price: 8900,
+  thumbnail:
+    "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167338/hr38owfqdmugljsm9vet.jpg",
+  code: "REME02",
+  stock: 5,
+});
+
+const allProducts = productManager.getProducts();
+console.log("Todos los productos:", allProducts);
+
+const productById = productManager.getProductById(1);
+console.log("Producto con ID 1:", productById);
+
+const updatedFields = {
+  title: "Remera Oversize Actualizada",
+  price: 10900,
+  stock: 15,
+};
+const isUpdated = productManager.updateProduct(1, updatedFields);
+console.log("Producto actualizado:", isUpdated);
+
+productManager.deleteProduct(2);
+console.log("Producto con ID 2 eliminado");
+
+const updatedProducts = productManager.getProducts();
+console.log("Productos actualizados:", updatedProducts);
