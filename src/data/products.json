@@ -1,1 +1,112 @@
-[]
+[
+  {
+    "title": "Remera Oversize Abstract",
+    "description": ["Oversize"],
+    "code": "REME01",
+    "price": 8900,
+    "stock": 15,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg",
+    "id": 1
+  },
+  {
+    "title": "Remera Oversize Full Dominion",
+    "description": ["Oversize"],
+    "code": "REME02",
+    "price": 8900,
+    "stock": 20,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166527/zwr9mfqcbmfazgeywwmk.jpg",
+    "id": 2
+  },
+  {
+    "title": "Remera Oversize Revolution",
+    "description": ["Oversize"],
+    "code": "REME03",
+    "price": 8900,
+    "stock": 20,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166163/zf25zvunabspnelqj7bj.jpg",
+    "id": 3
+  },
+  {
+    "title": "Remera Oversize Stubborn",
+    "description": ["Oversize"],
+    "code": "REME04",
+    "price": 8900,
+    "stock": 10,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167013/r3s90ahmhfyssnhgje1b.jpg",
+    "id": 4
+  },
+  {
+    "title": "Remera Oversize Metal Gun",
+    "description": ["Oversize"],
+    "code": "REME05",
+    "price": 8900,
+    "stock": 20,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165973/bt96shzc4hgrdpqvagvw.jpg",
+    "id": 5
+  },
+  {
+    "title": "Remera Oversize Do Your Own Thing",
+    "description": ["Oversize"],
+    "code": "REME06",
+    "price": 8900,
+    "stock": 18,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166902/dwtxezxdxsimd0jxafzl.jpg",
+    "id": 6
+  },
+  {
+    "title": "Remera Oversize Pounding Heart",
+    "description": ["Oversize"],
+    "code": "REME07",
+    "price": 8900,
+    "stock": 15,
+    "category": "Blanca",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167337/bvnl2bcipgsa4fjyzplc.jpg",
+    "id": 7
+  },
+  {
+    "title": "Remera Oversize The Rose",
+    "description": ["Oversize"],
+    "code": "REME08",
+    "price": 8900,
+    "stock": 20,
+    "category": "Blanca",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167338/hr38owfqdmugljsm9vet.jpg",
+    "id": 8
+  },
+  {
+    "title": "Remera Oversize Armando (S)",
+    "description": ["Oversize"],
+    "code": "REME09",
+    "price": 8900,
+    "stock": 20,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1693626528/gpdr0dgcyzkfhydzeeht.png",
+    "id": 9
+  },
+  {
+    "title": "Remera Oversize Angel Shit",
+    "description": ["Oversize"],
+    "code": "REME10",
+    "price": 8900,
+    "stock": 15,
+    "category": "Negra",
+    "status": true,
+    "thumbnail": "https://res.cloudinary.com/dfcnmxndf/image/upload/v1693626528/e9ga1r22ttz97bvgtyoe.png",
+    "id": 10
+  }
+]
