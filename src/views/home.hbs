@@ -1,28 +1,36 @@
-<div>
-  {{#if products.length}}
-    <h1>MENÚ</h1>
-    {{#each products}}
-      <div>
-        {{#if thumbnail}}
-          <img
-            src="/assets/imgProducts/{{this.thumbnail}}"
-            alt="{{this.title}}"
-          />
-        {{/if}}
-        <h2>{{this.title}}</h2>
-        <p>${{this.price}}</p>
-        <p>{{this.category}}</p>
-        <p>Stock: {{this.stock}}</p>
-        <p>Estado: {{this.status}}</p>
-        <h3>Ingredientes</h3>
-        <ul>
-          {{#each this.description}}
-            <li>{{this}}</li>
-          {{/each}}
-        </ul>
+<div class="app-content container">
+  <h1 class="title-category">MENÚ</h1>
+  {{#if productsNoFilter.length}}
+    <div>
+      <div class="item-list">
+        {{#each productsNoFilter}}
+          <a href="/api/products/{{this._id}}" class="card-list">
+            <div class="card">
+              {{#if thumbnail}}
+                <img
+                  class="card-img-top"
+                  src="/assets/imgProducts/{{this.thumbnail}}"
+                  alt="{{this.title}}"
+                />
+              {{/if}}
+              <div class="card-body row justify-content-evenly">
+                <h5 class="card-title mb-3">{{this.title}}</h5>
+                <p class="col-auto text-card-list">$ {{this.price}}</p>
+                <p
+                  class="col-auto text-card-list category-card"
+                  data-category="{{this.category}}"
+                >
+                  {{this.category}}
+                </p>
+              </div>
+            </div>
+          </a>
+        {{/each}}
       </div>
-    {{/each}}
+    </div>
   {{else}}
-    <h1>NO HAY MENÚ DISPONIBLE :(</h1>
+    <h2 class="title-category">No se pudo cargar el menú :(</h2>
   {{/if}}
 </div>
+
+<script type="module" src="/js/main.js"></script>

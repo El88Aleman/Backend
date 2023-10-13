@@ -3,12 +3,13 @@ import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import path from "path";
 import { __dirname } from "./utils.js";
+import { connectDB } from "./config/dbConnection.js";
+import { productManagerService } from "./dao/index.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
-import { productManagerService } from "./persistence/index.js";
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 const app = express();
 
 const httpServer = app.listen(port, () => {
@@ -16,6 +17,9 @@ const httpServer = app.listen(port, () => {
 });
 
 const socketServer = new Server(httpServer);
+
+// Conexión base de datos
+connectDB();
 
 // Configuración handlebars
 app.engine(".hbs", engine({ extname: ".hbs" }));
@@ -27,14 +31,14 @@ socketServer.on("connection", async (socket) => {
   console.log("Cliente conectado: ", socket.id);
 
   // Obtener productos
-  const products = await productManagerService.getProducts();
+  const products = await productManagerService.getProductsNoFilter();
   socket.emit("productsArray", products);
 
   // Agregar el producto del socket del cliente
   socket.on("addProduct", async (productsData) => {
     try {
       const result = await productManagerService.addProduct(productsData);
-      const products = await productManagerService.getProducts();
+      const products = await productManagerService.getProductsNoFilter();
       socketServer.emit("productsArray", products);
     } catch (error) {
       console.error(error.message);
@@ -55,6 +59,7 @@ socketServer.on("connection", async (socket) => {
 
 // Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/public")));
 
 // Rutas
