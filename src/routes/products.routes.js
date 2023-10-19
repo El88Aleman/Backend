@@ -68,10 +68,9 @@ router.get("/", async (req, res) => {
             )
           : baseUrl.concat(`?page=${products.nextPage}`)
         : null,
-      title: "Menú - Juicy Boy",
     };
 
-    res.render("productsPaginate", dataProducts);
+    res.status(201).json({ data: dataProducts });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -83,12 +82,7 @@ router.get("/:pid", async (req, res) => {
     const { pid } = req.params;
     const product = await productManagerService.getProductById(pid);
 
-    product.title = product.title.toUpperCase();
-
-    res.render("productDetail", {
-      product,
-      title: `${product.title} - Juicy Boy`,
-    });
+    res.status(201).json({ data: product });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

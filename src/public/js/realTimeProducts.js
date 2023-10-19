@@ -14,7 +14,7 @@ socketClient.on("productsArray", (productsData) => {
     productsData.forEach((product) => {
       let cardProduct = `
                 <div class="card-list">
-                    <a href="/api/products/${product._id}">
+                    <a href="/products/${product._id}">
                         <div class="card">
             `;
 
@@ -61,10 +61,10 @@ socketClient.on("productsArray", (productsData) => {
     categoryInfo.forEach((cat) => {
       const category = cat.getAttribute("data-category");
 
-      if (category === "blanca") {
-        cat.classList.add("blanca-category-card");
-      } else if (category === "negra") {
+      if (category === "negra") {
         cat.classList.add("negra-category-card");
+      } else if (category === "blanca") {
+        cat.classList.add("blanca-category-card");
       }
     });
   } else {

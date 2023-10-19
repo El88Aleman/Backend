@@ -19,7 +19,7 @@ router.get("/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
     const cart = await cartManagerService.getCartById(cid);
-    res.render("cart", { cart, title: "Carrito - Juicy Boy" });
+    res.status(201).json({ data: cart });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
