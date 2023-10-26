@@ -1,45 +1,54 @@
 import mongoose from "mongoose";
-import mongoosePaginate from "mongoose-paginate-v2";
 
-const productsCollection = "products";
+const usersCollection = "users";
 
-const productSchema = new mongoose.Schema({
-  title: {
+const userSchema = new mongoose.Schema({
+  first_name: {
     type: String,
-    required: [true, "El título es obligatorio"],
-  },
-  description: {
-    type: Array,
-    required: [true, "La descripción es obligatoria"],
-  },
-  code: {
-    type: String,
-    required: [true, "El código es obligatorio"],
-    unique: [true, "El código ingresado ya existe"],
-  },
-  price: {
-    type: Number,
-    required: [true, "El precio es obligatorio"],
-    min: [0, "El precio debe ser mayor o igual a 0"],
-  },
-  stock: {
-    type: Number,
-    required: [true, "El stock es obligatorio"],
-    min: [0, "El stock debe ser mayor o igual a 0"],
-  },
-  category: {
-    type: String,
-    required: [true, "La categoría es obligatoria"],
-    enum: {
-      values: ["negra", "blanca"],
-      message: "La categoría debe ser 'negra' o 'blanca'",
+    required: function () {
+      return !this.githubUser;
     },
   },
-  thumbnail: {
+  last_name: {
+    type: String,
+    required: function () {
+      return !this.githubUser;
+    },
+  },
+  email: {
+    type: String,
+    unique: [true, "El email ingresado ya tiene una cuenta"],
+    required: function () {
+      return !this.githubUser;
+    },
+  },
+  age: {
+    type: Number,
+    required: function () {
+      return !this.githubUser;
+    },
+  },
+  password: {
+    type: String,
+    required: function () {
+      return !this.githubUser;
+    },
+  },
+  role: {
+    type: String,
+    enum: ["usuario", "admin"],
+    default: "usuario",
+  },
+  githubUser: {
+    type: Boolean,
+    default: false,
+  },
+  githubName: {
+    type: String,
+  },
+  githubUsername: {
     type: String,
   },
 });
 
-productSchema.plugin(mongoosePaginate);
-
-export const productsModel = mongoose.model(productsCollection, productSchema);
+export const usersModel = mongoose.model(usersCollection, userSchema);

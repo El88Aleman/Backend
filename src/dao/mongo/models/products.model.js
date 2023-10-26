@@ -31,8 +31,8 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "La categoría es obligatoria"],
     enum: {
-      values: ["negra", "blanca"],
-      message: "La categoría debe ser 'negra' o 'blanca'",
+      values: ["blanca", "negra"],
+      message: "La categoría debe ser 'blanca' o 'negra'",
     },
   },
   thumbnail: {
