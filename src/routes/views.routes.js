@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { productManagerService, cartManagerService } from "../dao/index.js";
+import { productsDao, cartsDao } from "../dao/index.js";
 
 const router = Router();
 
@@ -22,8 +22,12 @@ const sessionMiddleware = (req, res, next) => {
 // Productos en home (Si no hay una sesión activa redirigir al login)
 router.get("/", noSessionMiddleware, async (req, res) => {
   try {
-    const productsNoFilter = await productManagerService.getProductsNoFilter();
-    res.render("home", { productsNoFilter, title: "Juicy Boy" });
+    const productsNoFilter = await productsDao.getProductsNoFilter();
+    res.render("home", {
+      productsNoFilter,
+      user: req.user,
+      title: "Juicy Boy",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -32,7 +36,10 @@ router.get("/", noSessionMiddleware, async (req, res) => {
 // Productos en real time products
 router.get("/realtimeproducts", async (req, res) => {
   try {
-    res.render("realTimeProducts", { title: "Juicy Boy" });
+    res.render("realTimeProducts", {
+      user: req.user,
+      title: "Menú - Juicy Boy",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -75,7 +82,7 @@ router.get("/products", noSessionMiddleware, async (req, res) => {
       }
     }
 
-    const products = await productManagerService.getProducts(query, options);
+    const products = await productsDao.getProducts(query, options);
 
     const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
 
@@ -102,17 +109,9 @@ router.get("/products", noSessionMiddleware, async (req, res) => {
             )
           : baseUrl.concat(`?page=${products.nextPage}`)
         : null,
-      title: "Menú - Sabores verdes",
+      title: "Menú - Juicy Boy",
     };
-
-    res.render("productsPaginate", {
-      dataProducts,
-      userFirstName: req.user?.first_name,
-      userLastName: req.user?.last_name,
-      userRole: req.user?.role,
-      userGitHubName: req.user?.githubName,
-      userGitHubUsername: req.user?.githubUsername,
-    });
+    res.render("productsPaginate", { dataProducts, user: req.user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -122,12 +121,13 @@ router.get("/products", noSessionMiddleware, async (req, res) => {
 router.get("/products/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    const product = await productManagerService.getProductById(pid);
+    const product = await productsDao.getProductById(pid);
 
     product.title = product.title.toUpperCase();
 
     res.render("productDetail", {
       product,
+      user: req.user,
       title: `${product.title} - Juicy Boy`,
     });
   } catch (error) {
@@ -139,8 +139,19 @@ router.get("/products/:pid", async (req, res) => {
 router.get("/carts/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
-    const cart = await cartManagerService.getCartById(cid);
-    res.render("cart", { cart, title: "Carrito - Juicy Boy" });
+    const cart = await cartsDao.getCartById(cid);
+
+    const totalPrice = cart.products.reduce(
+      (acc, prod) => acc + prod.quantity * prod.product.price,
+      0
+    );
+
+    res.render("cart", {
+      cart,
+      totalPrice,
+      user: req.user,
+      title: "Carrito - Juicy Boy",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -167,16 +178,7 @@ router.get("/login", sessionMiddleware, async (req, res) => {
 // Perfil
 router.get("/profile", noSessionMiddleware, async (req, res) => {
   try {
-    res.render("profile", {
-      userFirstName: req.user?.first_name,
-      userLastName: req.user?.last_name,
-      userEmail: req.user?.email,
-      userAge: req.user?.age,
-      userRole: req.user?.role,
-      userGitHubName: req.user?.githubName,
-      userGitHubUsername: req.user?.githubUsername,
-      title: "Perfil - Juicy Boy",
-    });
+    res.render("profile", { user: req.user, title: "Perfil - Juicy Boy" });
   } catch (error) {
     res.status(500).json({ error: "Error al obtener el perfil" });
   }

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { cartsDao } from "../../index.js";
 
 const usersCollection = "users";
 
@@ -34,6 +35,10 @@ const userSchema = new mongoose.Schema({
       return !this.githubUser;
     },
   },
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "carts",
+  },
   role: {
     type: String,
     enum: ["usuario", "admin"],
@@ -49,6 +54,16 @@ const userSchema = new mongoose.Schema({
   githubUsername: {
     type: String,
   },
+});
+
+// Asignar carrito al nuevo usuario
+userSchema.pre("save", async function (next) {
+  try {
+    const newCartUser = await cartsDao.createCart();
+    this.cart = newCartUser._id;
+  } catch (error) {
+    next(error);
+  }
 });
 
 export const usersModel = mongoose.model(usersCollection, userSchema);

@@ -9,6 +9,7 @@ router.post(
   "/signup",
   passport.authenticate("signupLocalStrategy", {
     failureRedirect: "/api/sessions/fail-signup",
+    session: false,
   }),
   async (req, res) => {
     res.render("login", { message: "Usuario registrado :)" });

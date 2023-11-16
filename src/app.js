@@ -2,14 +2,14 @@ import express from "express";
 import { engine } from "express-handlebars";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import { connectDB } from "./config/dbConnection.js";
+import { ConnectDB } from "./config/dbConnection.js";
 import passport from "passport";
 import { initializePassport } from "./config/passport.config.js";
 import { config } from "./config/config.js";
 import { Server } from "socket.io";
 import path from "path";
 import { __dirname } from "./utils.js";
-import { productManagerService } from "./dao/index.js";
+import { productsDao } from "./dao/index.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { productsRouter } from "./routes/products.routes.js";
@@ -25,7 +25,7 @@ const httpServer = app.listen(port, () => {
 const socketServer = new Server(httpServer);
 
 // Conexión base de datos
-connectDB();
+ConnectDB.getInstance();
 
 // Configuración handlebars
 app.engine(".hbs", engine({ extname: ".hbs" }));
@@ -36,7 +36,6 @@ app.set("views", path.join(__dirname, "/views"));
 app.use(
   session({
     store: MongoStore.create({
-      ttl: 3000,
       mongoUrl: config.mongo.url,
     }),
     secret: config.server.secretSession,
@@ -55,14 +54,14 @@ socketServer.on("connection", async (socket) => {
   console.log("Cliente conectado: ", socket.id);
 
   // Obtener productos
-  const products = await productManagerService.getProductsNoFilter();
+  const products = await productsDao.getProductsNoFilter();
   socket.emit("productsArray", products);
 
   // Agregar el producto del socket del cliente
   socket.on("addProduct", async (productsData) => {
     try {
-      const result = await productManagerService.addProduct(productsData);
-      const products = await productManagerService.getProductsNoFilter();
+      const result = await productsDao.addProduct(productsData);
+      const products = await productsDao.getProductsNoFilter();
       socketServer.emit("productsArray", products);
     } catch (error) {
       console.error(error.message);
@@ -72,8 +71,8 @@ socketServer.on("connection", async (socket) => {
   // Eliminar el producto del socket del cliente
   socket.on("deleteProduct", async (productId) => {
     try {
-      const result = await productManagerService.deleteProduct(productId);
-      const products = await productManagerService.getProducts();
+      const result = await productsDao.deleteProduct(productId);
+      const products = await productsDao.getProducts();
       socketServer.emit("productsArray", products);
     } catch (error) {
       console.error(error.message);
