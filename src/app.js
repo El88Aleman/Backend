@@ -1,6 +1,7 @@
 import express from "express";
 import { engine } from "express-handlebars";
 import session from "express-session";
+import cors from "cors";
 import MongoStore from "connect-mongo";
 import { ConnectDB } from "./config/dbConnection.js";
 import passport from "passport";
@@ -9,13 +10,13 @@ import { config } from "./config/config.js";
 import { Server } from "socket.io";
 import path from "path";
 import { __dirname } from "./utils.js";
-import { productsDao } from "./dao/index.js";
+import { ProductsService } from "./services/products.service.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
 
-const port = process.env.PORT || 8080;
+const port = config.server.port;
 const app = express();
 
 const httpServer = app.listen(port, () => {
@@ -36,6 +37,7 @@ app.set("views", path.join(__dirname, "/views"));
 app.use(
   session({
     store: MongoStore.create({
+      ttl: 10800000,
       mongoUrl: config.mongo.url,
     }),
     secret: config.server.secretSession,
@@ -54,14 +56,14 @@ socketServer.on("connection", async (socket) => {
   console.log("Cliente conectado: ", socket.id);
 
   // Obtener productos
-  const products = await productsDao.getProductsNoFilter();
+  const products = await ProductsService.getProductsNoFilter();
   socket.emit("productsArray", products);
 
   // Agregar el producto del socket del cliente
-  socket.on("addProduct", async (productsData) => {
+  socket.on("addProduct", async (productInfo) => {
     try {
-      const result = await productsDao.addProduct(productsData);
-      const products = await productsDao.getProductsNoFilter();
+      const result = await ProductsService.addProduct(productInfo);
+      const products = await ProductsService.getProductsNoFilter();
       socketServer.emit("productsArray", products);
     } catch (error) {
       console.error(error.message);
@@ -71,8 +73,8 @@ socketServer.on("connection", async (socket) => {
   // Eliminar el producto del socket del cliente
   socket.on("deleteProduct", async (productId) => {
     try {
-      const result = await productsDao.deleteProduct(productId);
-      const products = await productsDao.getProducts();
+      const result = await ProductsService.deleteProduct(productId);
+      const products = await ProductsService.getProductsNoFilter();
       socketServer.emit("productsArray", products);
     } catch (error) {
       console.error(error.message);
@@ -84,6 +86,7 @@ socketServer.on("connection", async (socket) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "/public")));
+app.use(cors());
 
 // Rutas
 app.use("/", viewsRouter);

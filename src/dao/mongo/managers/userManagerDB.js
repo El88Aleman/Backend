@@ -17,10 +17,17 @@ export class UserManagerDB {
   }
 
   // Login
-  async loginUser(email) {
+  async loginUser(loginIdentifier, isGithubLogin = false) {
     try {
-      const result = await this.model.findOne({ email });
-      return result;
+      if (isGithubLogin) {
+        const result = await this.model.findOne({
+          github_username: loginIdentifier,
+        });
+        return result;
+      } else {
+        const result = await this.model.findOne({ email: loginIdentifier });
+        return result;
+      }
     } catch (error) {
       console.log("loginUser: ", error.message);
       throw new Error("Error al iniciar sesión. Volve a ingresar los datos");

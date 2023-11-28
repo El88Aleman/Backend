@@ -4,6 +4,7 @@ dotenv.config();
 
 export const config = {
   server: {
+    port: process.env.PORT,
     secretSession: process.env.SECRET_SESSION,
   },
   mongo: {

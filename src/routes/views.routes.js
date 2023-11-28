@@ -1,32 +1,25 @@
 import { Router } from "express";
-import { productsDao, cartsDao } from "../dao/index.js";
+import {
+  noSessionMiddleware,
+  sessionMiddleware,
+  checkRoleMiddleware,
+} from "../middlewares/auth.js";
+import { ProductsService } from "../services/products.service.js";
+import { CartsService } from "../services/carts.service.js";
+import { GetUserInfoDto } from "../dao/dto/getUserInfo.dto.js";
 
 const router = Router();
-
-// Si no hay una sesión activa
-const noSessionMiddleware = (req, res, next) => {
-  if (!req.isAuthenticated()) {
-    return res.redirect("/login");
-  }
-  next();
-};
-
-// Si hay una sesión activa
-const sessionMiddleware = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return res.redirect("/profile");
-  }
-  next();
-};
 
 // Productos en home (Si no hay una sesión activa redirigir al login)
 router.get("/", noSessionMiddleware, async (req, res) => {
   try {
-    const productsNoFilter = await productsDao.getProductsNoFilter();
+    const productsNoFilter = await ProductsService.getProductsNoFilter();
+
+    const userInfoDto = new GetUserInfoDto(req.user);
     res.render("home", {
       productsNoFilter,
-      user: req.user,
-      title: "Juicy Boy",
+      userInfoDto,
+      title: "Juicy Boy - Uruguay",
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -34,16 +27,18 @@ router.get("/", noSessionMiddleware, async (req, res) => {
 });
 
 // Productos en real time products
-router.get("/realtimeproducts", async (req, res) => {
-  try {
-    res.render("realTimeProducts", {
-      user: req.user,
-      title: "Menú - Juicy Boy",
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+router.get(
+  "/realtimeproducts",
+  noSessionMiddleware,
+  checkRoleMiddleware(["admin"]),
+  async (req, res) => {
+    try {
+      res.render("realTimeProducts", { title: "Menú - Juicy Boy" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 // Todos los productos
 router.get("/products", noSessionMiddleware, async (req, res) => {
@@ -82,7 +77,7 @@ router.get("/products", noSessionMiddleware, async (req, res) => {
       }
     }
 
-    const products = await productsDao.getProducts(query, options);
+    const products = await ProductsService.getProducts(query, options);
 
     const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
 
@@ -111,23 +106,26 @@ router.get("/products", noSessionMiddleware, async (req, res) => {
         : null,
       title: "Menú - Juicy Boy",
     };
-    res.render("productsPaginate", { dataProducts, user: req.user });
+
+    const userInfoDto = new GetUserInfoDto(req.user);
+    res.render("productsPaginate", { dataProducts, userInfoDto });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 // Detalle de producto
-router.get("/products/:pid", async (req, res) => {
+router.get("/products/:pid", noSessionMiddleware, async (req, res) => {
   try {
     const { pid } = req.params;
-    const product = await productsDao.getProductById(pid);
+    const product = await ProductsService.getProductById(pid);
 
     product.title = product.title.toUpperCase();
 
+    const userInfoDto = new GetUserInfoDto(req.user);
     res.render("productDetail", {
       product,
-      user: req.user,
+      userInfoDto,
       title: `${product.title} - Juicy Boy`,
     });
   } catch (error) {
@@ -136,31 +134,43 @@ router.get("/products/:pid", async (req, res) => {
 });
 
 // Carrito
-router.get("/carts/:cid", async (req, res) => {
-  try {
-    const { cid } = req.params;
-    const cart = await cartsDao.getCartById(cid);
+router.get(
+  "/carts/:cid",
+  noSessionMiddleware,
+  checkRoleMiddleware(["usuario"]),
+  async (req, res) => {
+    try {
+      const { cid } = req.params;
+      const cart = await CartsService.getCartById(cid);
 
-    const totalPrice = cart.products.reduce(
-      (acc, prod) => acc + prod.quantity * prod.product.price,
-      0
-    );
+      // Precio total
+      const totalPrice = cart.products.reduce(
+        (acc, prod) => acc + prod.quantity * prod.product.price,
+        0
+      );
 
-    res.render("cart", {
-      cart,
-      totalPrice,
-      user: req.user,
-      title: "Carrito - Juicy Boy",
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+      // Subtotal (cada producto)
+      cart.products.forEach((prod) => {
+        prod.subtotalPrice = prod.quantity * prod.product.price;
+      });
+
+      const userInfoDto = new GetUserInfoDto(req.user);
+      res.render("cart", {
+        cart,
+        totalPrice,
+        userInfoDto,
+        title: "Carrito - Juicy Boy",
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 // Signup
 router.get("/signup", sessionMiddleware, async (req, res) => {
   try {
-    res.render("signup", { title: "Registrarse - Juicy Boy" });
+    res.render("signup", { title: "Registrarse -  Juicy Boy" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -178,7 +188,8 @@ router.get("/login", sessionMiddleware, async (req, res) => {
 // Perfil
 router.get("/profile", noSessionMiddleware, async (req, res) => {
   try {
-    res.render("profile", { user: req.user, title: "Perfil - Juicy Boy" });
+    const userInfoDto = new GetUserInfoDto(req.user);
+    res.render("profile", { userInfoDto, title: "Perfil - Juicy Boy" });
   } catch (error) {
     res.status(500).json({ error: "Error al obtener el perfil" });
   }

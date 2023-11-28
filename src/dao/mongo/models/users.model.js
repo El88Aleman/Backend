@@ -1,65 +1,69 @@
 import mongoose from "mongoose";
-import { cartsDao } from "../../index.js";
+import { CartsService } from "../../../services/carts.service.js";
 
 const usersCollection = "users";
 
 const userSchema = new mongoose.Schema({
+  full_name: {
+    type: String,
+  },
   first_name: {
     type: String,
     required: function () {
-      return !this.githubUser;
+      return !this.github_user;
     },
   },
   last_name: {
     type: String,
     required: function () {
-      return !this.githubUser;
+      return !this.github_user;
     },
   },
   email: {
     type: String,
     unique: [true, "El email ingresado ya tiene una cuenta"],
     required: function () {
-      return !this.githubUser;
+      return !this.github_user;
     },
   },
   age: {
     type: Number,
     required: function () {
-      return !this.githubUser;
+      return !this.github_user;
     },
   },
   password: {
     type: String,
     required: function () {
-      return !this.githubUser;
+      return !this.github_user;
     },
-  },
-  cart: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "carts",
   },
   role: {
     type: String,
     enum: ["usuario", "admin"],
     default: "usuario",
   },
-  githubUser: {
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "carts",
+  },
+  github_user: {
     type: Boolean,
     default: false,
   },
-  githubName: {
+  github_name: {
     type: String,
   },
-  githubUsername: {
+  github_username: {
     type: String,
+    unique: [true, "El usuario de GitHub ingresado ya tiene una cuenta"],
   },
 });
 
 // Asignar carrito al nuevo usuario
 userSchema.pre("save", async function (next) {
   try {
-    const newCartUser = await cartsDao.createCart();
+    const newCartUser = await CartsService.createCart();
     this.cart = newCartUser._id;
   } catch (error) {
     next(error);

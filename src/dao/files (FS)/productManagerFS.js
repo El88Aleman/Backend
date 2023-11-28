@@ -48,8 +48,8 @@ export class ProductManagerFS {
           typeof productInfo.stock !== "number" ||
           !productInfo.category ||
           typeof productInfo.category !== "string" ||
-          (productInfo.category !== "blanca" &&
-            productInfo.category !== "negra") ||
+          (productInfo.category !== "vegano" &&
+            productInfo.category !== "vegetariano") ||
           (productInfo.thumbnail && typeof productInfo.thumbnail !== "string")
         ) {
           throw new Error(

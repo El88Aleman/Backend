@@ -1,6 +1,10 @@
 import { productsDao } from "../dao/index.js";
 
 export class ProductsService {
+  static getProductsNoFilter() {
+    return productsDao.getProductsNoFilter();
+  }
+
   static getProducts(query, options) {
     return productsDao.getProducts(query, options);
   }
