@@ -23,7 +23,7 @@ export const checkRoleMiddleware = (roles) => {
       const userInfoDto = new GetUserInfoDto(req.user);
       res.render("productsPaginate", {
         userInfoDto,
-        error: "¡Lo sentimos! No tenés acceso a esta página",
+        message: "¡Lo sentimos! No tenés acceso a esta página",
       });
     } else {
       next();

@@ -38,6 +38,11 @@ export class UserManagerDB {
   async getUserById(userId) {
     try {
       const result = await this.model.findById(userId).lean();
+
+      if (!result) {
+        throw new Error("No se encontró el usuario");
+      }
+
       return result;
     } catch (error) {
       console.log("getUserById: ", error.message);

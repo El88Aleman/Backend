@@ -1,10 +1,27 @@
+import { CustomError } from "../services/customErrors/customError.service.js";
+import { EError } from "../enums/EError.js";
+import {
+  failSignupError,
+  failLoginError,
+  logoutError,
+  profileError,
+  getUserByIdError,
+} from "../services/customErrors/dictionaryErrors/usersErrors.service.js";
+
 export class SessionsController {
   static redirectLogin = async (req, res) => {
     res.render("login", { message: "Usuario registrado :)" });
   };
 
   static failSignup = async (req, res) => {
-    res.render("signup", { error: "Error al completar el registro" });
+    viewRender = "signup";
+
+    CustomError.createError({
+      name: "fail signup error",
+      cause: failSignupError(req.body),
+      message: "Los datos ingresados son inválidos",
+      errorCode: EError.AUTH_ERROR,
+    });
   };
 
   static redirectProducts = async (req, res) => {
@@ -12,22 +29,39 @@ export class SessionsController {
   };
 
   static failLogin = async (req, res) => {
-    res.render("login", {
-      error: "Error al iniciar sesión. Volve a ingresar los datos",
+    viewRender = "login";
+
+    CustomError.createError({
+      name: "fail login error",
+      cause: failLoginError(req.body),
+      message: "Los datos ingresados son inválidos",
+      errorCode: EError.AUTH_ERROR,
     });
   };
 
   static logout = async (req, res) => {
+    viewRender = "logout";
+
     try {
       req.session.destroy((err) => {
         if (err) {
-          return res.render("profile", { error: "Error al cerrar la sesión" });
+          return CustomError.createError({
+            name: "logout error",
+            cause: logoutError(),
+            message: "Error al cerrar la sesión",
+            errorCode: EError.AUTH_ERROR,
+          });
         } else {
           return res.redirect("/login");
         }
       });
     } catch (error) {
-      res.render("logout", { error: "Error al cerrar la sesión" });
+      CustomError.createError({
+        name: "logout error",
+        cause: logoutError(),
+        message: "Error al cerrar la sesión",
+        errorCode: EError.AUTH_ERROR,
+      });
     }
   };
 }

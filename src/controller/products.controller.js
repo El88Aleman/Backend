@@ -1,4 +1,16 @@
 import { ProductsService } from "../services/products.service.js";
+import { generateProductMock } from "../helpers/mock.js";
+import { CustomError } from "../services/customErrors/customError.service.js";
+import { EError } from "../enums/EError.js";
+import {
+  getProductsError,
+  getProductByIdError,
+  addProductError,
+  updateProductParamError,
+  updateProductError,
+  deleteProductError,
+  mockingProductsError,
+} from "../services/customErrors/dictionaryErrors/productsErrors.service.js";
 
 export class ProductsController {
   static getProducts = async (req, res) => {
@@ -68,21 +80,31 @@ export class ProductsController {
 
       res.status(201).json({ data: dataProducts });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   };
 
-  static getProductById = async (req, res) => {
+  static getProductById = async (req, res, next) => {
     try {
       const { pid } = req.params;
       const product = await ProductsService.getProductById(pid);
+
+      if (!product) {
+        CustomError.createError({
+          name: "get product by id error",
+          cause: getProductByIdError(pid),
+          message: "El parmámetro es inválido",
+          errorCode: EError.INVALID_PARAM_ERROR,
+        });
+      }
+
       res.status(201).json({ data: product });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   };
 
-  static addProduct = async (req, res) => {
+  static addProduct = async (req, res, next) => {
     try {
       const productInfo = req.body;
       const thumbnailFile = req.file ? req.file.filename : undefined;
@@ -90,9 +112,13 @@ export class ProductsController {
       productInfo.thumbnail = thumbnailFile;
 
       const addedProduct = await ProductsService.addProduct(productInfo);
-      res.status(201).json({ data: addedProduct });
+      res.json({
+        status: "success",
+        message: "Producto creado",
+        data: addedProduct,
+      });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   };
 
@@ -119,6 +145,22 @@ export class ProductsController {
       const { pid } = req.params;
       const deletedProduct = await ProductsService.deleteProduct(pid);
       res.status(200).json({ data: deletedProduct });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
+  static mockingProducts = async (req, res) => {
+    try {
+      const quantity = parseInt(req.query.quantity) || 100;
+      let products = [];
+
+      for (let i = 0; i < quantity; i++) {
+        const newProduct = generateProductMock();
+        products.push(newProduct);
+      }
+
+      res.status(201).json({ data: { payload: products } });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

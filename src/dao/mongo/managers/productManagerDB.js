@@ -22,8 +22,7 @@ export class ProductManagerDB {
       const result = await this.model.paginate(query, options);
       return result;
     } catch (error) {
-      console.log("getProducts: ", error.message);
-      throw new Error("Error al obtener los productos");
+      throw error;
     }
   }
 
@@ -33,13 +32,12 @@ export class ProductManagerDB {
       const result = await this.model.findById(productId).lean();
 
       if (!result) {
-        throw new Error("No se encontró el producto");
+        throw error;
       }
 
       return result;
     } catch (error) {
-      console.log("getProductById: ", error.message);
-      throw new Error("Error al obtener el producto");
+      throw error;
     }
   }
 
@@ -49,7 +47,6 @@ export class ProductManagerDB {
       const result = await this.model.create(productInfo);
       return result;
     } catch (error) {
-      console.log("addProduct: ", error.message);
       throw error;
     }
   }

@@ -3,6 +3,14 @@ import { TicketsService } from "../services/tickets.service.js";
 import { CartsService } from "../services/carts.service.js";
 import { ProductsService } from "../services/products.service.js";
 import { GetUserInfoDto } from "../dao/dto/getUserInfo.dto.js";
+import { CustomError } from "../services/customErrors/customError.service.js";
+import { EError } from "../enums/EError.js";
+import {
+  purchaseCartError,
+  rejectedProductsPurchaseCartError,
+  getTicketsError,
+  getTicketByIdError,
+} from "../services/customErrors/dictionaryErrors/ticketsErrors.service.js";
 
 export class TicketsController {
   static purchaseCart = async (req, res) => {
@@ -39,7 +47,7 @@ export class TicketsController {
         // Crear ticket
         const newTicket = {
           code: uuidv4(),
-          purchase_datetime: new Date().toLocaleString("en-AR", {
+          purchase_datetime: new Date().toLocaleString("en-UY", {
             timeZone: "America/Buenos Aires",
           }),
           amount: ticketProducts.reduce(

@@ -1,5 +1,17 @@
 import { CartsService } from "../services/carts.service.js";
 import { ProductsService } from "../services/products.service.js";
+import { CustomError } from "../services/customErrors/customError.service.js";
+import { EError } from "../enums/EError.js";
+import {
+  getCartsError,
+  getCartByIdError,
+  createCartError,
+  addProductToCartError,
+  updateProductsInCartError,
+  updateProductQuantityInCartError,
+  deleteAllProductsInCartError,
+  deleteProductInCartError,
+} from "../services/customErrors/dictionaryErrors/cartsErrors.service.js";
 
 export class CartsController {
   static getCarts = async (req, res) => {

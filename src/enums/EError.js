@@ -1,0 +1,7 @@
+export const EError = {
+  DATABASE_ERROR: 1,
+  AUTH_ERROR: 2,
+  AUTH_JSON_ERROR: 3,
+  INVALID_BODY_ERROR: 4,
+  INVALID_PARAM_ERROR: 5,
+};

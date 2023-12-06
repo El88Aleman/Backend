@@ -68,7 +68,7 @@ updateProductQuantityInCartBtn.forEach(async (btn) => {
         );
       }
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   });
 });

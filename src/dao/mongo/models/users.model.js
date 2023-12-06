@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
   },
   github_username: {
     type: String,
-    unique: [true, "El usuario de GitHub ingresado ya tiene una cuenta"],
+    unique: true,
   },
 });
 
