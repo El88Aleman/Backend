@@ -1,4 +1,5 @@
 import { cartsModel } from "../models/carts.model.js";
+import { logger } from "../../../helpers/logger.js";
 
 export class CartManagerDB {
   constructor() {
@@ -14,7 +15,7 @@ export class CartManagerDB {
         .lean();
       return result;
     } catch (error) {
-      console.log("getCarts: ", error.message);
+      logger.error("get carts: Error al obtener los carritos");
       throw new Error("Error al obtener los carritos");
     }
   }
@@ -28,12 +29,12 @@ export class CartManagerDB {
         .lean();
 
       if (!result) {
-        throw new Error("No se encontró el carrito");
+        throw error;
       }
 
       return result;
     } catch (error) {
-      console.log("getCartById: ", error.message);
+      logger.error("get cart by id: Error al obtener el carrito");
       throw new Error("Error al obtener el carrito");
     }
   }
@@ -45,7 +46,7 @@ export class CartManagerDB {
       const result = await this.model.create(newCart);
       return result;
     } catch (error) {
-      console.log("createCart: ", error.message);
+      logger.error("create cart: Error al crear el carrito");
       throw new Error("Error al crear el carrito");
     }
   }
@@ -69,7 +70,9 @@ export class CartManagerDB {
       });
       return result;
     } catch (error) {
-      console.log("addProductToCart: ", error.message);
+      logger.error(
+        "add product to cart: Error al agregar el producto al carrito"
+      );
       throw new Error("Error al agregar el producto al carrito");
     }
   }
@@ -86,7 +89,9 @@ export class CartManagerDB {
       });
       return result;
     } catch (error) {
-      console.log("updateProductsInCart: ", error.message);
+      logger.error(
+        "update products in cart: Error al actualizar los productos del carrito"
+      );
       throw new Error("Error al actualizar los productos del carrito");
     }
   }
@@ -108,15 +113,15 @@ export class CartManagerDB {
           });
           return result;
         } else {
-          throw new Error("La cantidad debe ser mayor o igual a 1");
+          throw error;
         }
       } else {
-        throw new Error(
-          "No se puede actualizar la cantidad porque el producto no se encuentra en el carrito"
-        );
+        throw error;
       }
     } catch (error) {
-      console.log("updateProductQuantityInCart: ", error.message);
+      logger.error(
+        "update product quantity in cart: Error al actualizar la cantidad del producto en el carrito"
+      );
       throw new Error(
         "Error al actualizar la cantidad del producto en el carrito"
       );
@@ -136,7 +141,9 @@ export class CartManagerDB {
       });
       return result;
     } catch (error) {
-      console.log("deleteAllProductsInCart: ", error.message);
+      logger.error(
+        "delete all products in cart: Error al eliminar los productos del carrito"
+      );
       throw new Error("Error al eliminar los productos del carrito");
     }
   }
@@ -161,10 +168,12 @@ export class CartManagerDB {
         });
         return result;
       } else {
-        throw new Error("El producto a eliminar no se encuentra en el carrito");
+        throw error;
       }
     } catch (error) {
-      console.log("deleteProductInCart: ", error.message);
+      logger.error(
+        "delete product in cart: Error al eliminar el producto del carrito"
+      );
       throw new Error("Error al eliminar el producto del carrito");
     }
   }

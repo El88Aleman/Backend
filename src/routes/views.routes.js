@@ -46,4 +46,7 @@ router.get("/login", sessionMiddleware, ViewsController.renderLogin);
 // Perfil
 router.get("/profile", noSessionMiddleware, ViewsController.renderProfile);
 
+// Logger test
+router.get("/loggertest", ViewsController.loggerTest);
+
 export { router as viewsRouter };

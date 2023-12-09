@@ -63,9 +63,7 @@ updateProductQuantityInCartBtn.forEach(async (btn) => {
       if (response.ok) {
         cartUpdatedEvent();
       } else {
-        throw new Error(
-          "Error al actualizar la cantidad del producto en el carrito"
-        );
+        throw error;
       }
     } catch (error) {
       throw error;
@@ -100,7 +98,7 @@ deleteProductInCartBtn.forEach(async (btn) => {
 
         location.reload();
       } else {
-        throw new Error("Error al eliminar el producto del carrito");
+        throw error;
       }
     } catch (error) {
       throw error;
@@ -147,7 +145,7 @@ deleteAllProductsInCartBtn.forEach(async (btn) => {
 
         location.reload();
       } else {
-        throw new Error("Error al vaciar el carrito");
+        throw error;
       }
     } catch (error) {
       throw error;
@@ -200,7 +198,7 @@ finishPurchaseBtn.forEach(async (btn) => {
 
         location.reload();
       } else {
-        throw new Error("Error al finalizar la compra");
+        throw error;
       }
     } catch (error) {
       throw error;

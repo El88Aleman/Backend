@@ -1,28 +1,37 @@
 import { ProductsService } from "../services/products.service.js";
 import { CartsService } from "../services/carts.service.js";
 import { GetUserInfoDto } from "../dao/dto/getUserInfo.dto.js";
-import { CustomError } from "../services/customErrors/customError.service.js";
 import { EError } from "../enums/EError.js";
+import { CustomError } from "../services/customErrors/customError.service.js";
 import {
-  getProductsError,
-  getProductByIdError,
-} from "../services/customErrors/dictionaryErrors/productsErrors.service.js";
-import { getCartByIdError } from "../services/customErrors/dictionaryErrors/cartsErrors.service.js";
-import {
-  failSignupError,
-  failLoginError,
-  profileError,
-} from "../services/customErrors/dictionaryErrors/usersErrors.service.js";
+  databaseGetError,
+  paramError,
+} from "../services/customErrors/errors/generalErrors.service.js";
+import { logger } from "../helpers/logger.js";
 
 export class ViewsController {
-  static renderHome = async (req, res) => {
+  static renderHome = async (req, res, next) => {
     try {
       const productsNoFilter = await ProductsService.getProductsNoFilter();
 
+      // Error customizado
+      if (!productsNoFilter) {
+        CustomError.createError({
+          name: "get products error",
+          cause: databaseGetError(),
+          message: "Error al obtener los productos",
+          errorCode: EError.DATABASE_ERROR,
+        });
+      }
+
       const userInfoDto = new GetUserInfoDto(req.user);
-      res.render("home", { productsNoFilter, userInfoDto, title: "Juicy Boy" });
+      res.render("home", {
+        productsNoFilter,
+        userInfoDto,
+        title: "Juicy Boy",
+      });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   };
 
@@ -30,11 +39,12 @@ export class ViewsController {
     try {
       res.render("realTimeProducts", { title: "Menú - Juicy Boy" });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      logger.error("real time products: Error al renderizar la página");
+      res.json({ status: "error", error: error.message });
     }
   };
 
-  static renderProducts = async (req, res) => {
+  static renderProducts = async (req, res, next) => {
     try {
       const { limit = 8, page = 1, sort, category, stock } = req.query;
 
@@ -72,6 +82,16 @@ export class ViewsController {
 
       const products = await ProductsService.getProducts(query, options);
 
+      // Error customizado
+      if (!products) {
+        CustomError.createError({
+          name: "get products error",
+          cause: databaseGetError(),
+          message: "Error al obtener los productos",
+          errorCode: EError.DATABASE_ERROR,
+        });
+      }
+
       const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
 
       const dataProducts = {
@@ -103,14 +123,24 @@ export class ViewsController {
       const userInfoDto = new GetUserInfoDto(req.user);
       res.render("productsPaginate", { dataProducts, userInfoDto });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   };
 
-  static renderProductDetail = async (req, res) => {
+  static renderProductDetail = async (req, res, next) => {
     try {
       const { pid } = req.params;
       const product = await ProductsService.getProductById(pid);
+
+      // Error customizado
+      if (!product) {
+        CustomError.createError({
+          name: "get product by id error",
+          cause: paramError(pid),
+          message: "Error al obtener el producto",
+          errorCode: EError.INVALID_PARAM_ERROR,
+        });
+      }
 
       product.title = product.title.toUpperCase();
 
@@ -121,14 +151,24 @@ export class ViewsController {
         title: `${product.title} - Juicy Boy`,
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   };
 
-  static renderCart = async (req, res) => {
+  static renderCart = async (req, res, next) => {
     try {
       const { cid } = req.params;
       const cart = await CartsService.getCartById(cid);
+
+      // Error customizado
+      if (!cart) {
+        CustomError.createError({
+          name: "get cart by id error",
+          cause: paramError(cid),
+          message: "Error al obtener el carrito",
+          errorCode: EError.INVALID_PARAM_ERROR,
+        });
+      }
 
       // Precio total
       const totalPrice = cart.products.reduce(
@@ -149,7 +189,7 @@ export class ViewsController {
         title: "Carrito - Juicy Boy",
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   };
 
@@ -157,7 +197,7 @@ export class ViewsController {
     try {
       res.render("signup", { title: "Registrarse - Juicy Boy" });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.json({ status: "error", error: error.message });
     }
   };
 
@@ -165,7 +205,7 @@ export class ViewsController {
     try {
       res.render("login", { title: "Iniciar sesión - Juicy Boy" });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.json({ status: "error", error: error.message });
     }
   };
 
@@ -174,7 +214,18 @@ export class ViewsController {
       const userInfoDto = new GetUserInfoDto(req.user);
       res.render("profile", { userInfoDto, title: "Perfil - Juicy Boy" });
     } catch (error) {
-      res.status(500).json({ error: "Error al obtener el perfil" });
+      res.json({ status: "error", error: "Error al obtener el perfil" });
     }
+  };
+
+  static loggerTest = (req, res) => {
+    logger.fatal("Log fatal test");
+    logger.error("Log error test");
+    logger.warning("Log warning test");
+    logger.info("Log info test");
+    logger.http("Log http test");
+    logger.debug("Log debug test");
+
+    res.send("Logger test recibido");
   };
 }

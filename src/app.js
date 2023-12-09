@@ -10,25 +10,19 @@ import { config } from "./config/config.js";
 import { Server } from "socket.io";
 import path from "path";
 import { __dirname } from "./utils.js";
+import { logger } from "./helpers/logger.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 import { ProductsService } from "./services/products.service.js";
 import { viewsRouter } from "./routes/views.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { productsRouter } from "./routes/products.routes.js";
 import { cartsRouter } from "./routes/carts.routes.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
-import { CustomError } from "./services/customErrors/customError.service.js";
-import { EError } from "./enums/EError.js";
-import {
-  getProductsError,
-  addProductError,
-  deleteProductError,
-} from "./services/customErrors/dictionaryErrors/productsErrors.service.js";
 
 const port = config.server.port;
 const app = express();
 
 const httpServer = app.listen(port, () => {
-  console.log("Servidor funcionando en el puerto: ", port);
+  logger.info(`Servidor funcionando en el puerto: ${port}`);
 });
 
 const socketServer = new Server(httpServer);
@@ -61,7 +55,7 @@ app.use(passport.session());
 
 // Configuración socket.io
 socketServer.on("connection", async (socket) => {
-  console.log("Cliente conectado: ", socket.id);
+  logger.info("Cliente conectado: ", socket.id);
 
   // Obtener productos
   const products = await ProductsService.getProductsNoFilter();
@@ -74,7 +68,7 @@ socketServer.on("connection", async (socket) => {
       const products = await ProductsService.getProductsNoFilter();
       socketServer.emit("productsArray", products);
     } catch (error) {
-      console.error(error.message);
+      logger.error(error);
     }
   });
 
@@ -85,7 +79,7 @@ socketServer.on("connection", async (socket) => {
       const products = await ProductsService.getProductsNoFilter();
       socketServer.emit("productsArray", products);
     } catch (error) {
-      console.error(error.message);
+      logger.error(error);
     }
   });
 });

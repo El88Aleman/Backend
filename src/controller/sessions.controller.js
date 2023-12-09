@@ -1,12 +1,5 @@
-import { CustomError } from "../services/customErrors/customError.service.js";
-import { EError } from "../enums/EError.js";
-import {
-  failSignupError,
-  failLoginError,
-  logoutError,
-  profileError,
-  getUserByIdError,
-} from "../services/customErrors/dictionaryErrors/usersErrors.service.js";
+import { usersDao } from "../dao/index.js";
+import { logger } from "../helpers/logger.js";
 
 export class SessionsController {
   static redirectLogin = async (req, res) => {
@@ -14,13 +7,18 @@ export class SessionsController {
   };
 
   static failSignup = async (req, res) => {
-    viewRender = "signup";
+    logger.error("signup: Error al completar el registro");
+    res.render("signup", {
+      error: `
+                                    Error al completar el registro
 
-    CustomError.createError({
-      name: "fail signup error",
-      cause: failSignupError(req.body),
-      message: "Los datos ingresados son inválidos",
-      errorCode: EError.AUTH_ERROR,
+                                    Todos los campos son obligatorios:
+                                    * Nombre: debe ser un texto
+                                    * Apellido: debe ser un texto
+                                    * Edad: debe ser un número
+                                    * Email: no debe tener una cuenta ya existente
+                                    * Contraseña: es obligatoria
+                                `,
     });
   };
 
@@ -29,39 +27,52 @@ export class SessionsController {
   };
 
   static failLogin = async (req, res) => {
-    viewRender = "login";
+    logger.error("login: Error al iniciar sesión");
+    res.render("login", {
+      error: `
+                                    Error al iniciar sesión
 
-    CustomError.createError({
-      name: "fail login error",
-      cause: failLoginError(req.body),
-      message: "Los datos ingresados son inválidos",
-      errorCode: EError.AUTH_ERROR,
+                                    Volve a ingresar los datos:
+                                    * El email ingresado debe ser de una cuenta existente
+                                    * La contraseña puede estar incorrecta
+                                `,
     });
   };
 
   static logout = async (req, res) => {
-    viewRender = "logout";
-
     try {
       req.session.destroy((err) => {
         if (err) {
-          return CustomError.createError({
-            name: "logout error",
-            cause: logoutError(),
-            message: "Error al cerrar la sesión",
-            errorCode: EError.AUTH_ERROR,
-          });
+          logger.error("logout: Error al cerrar la sesión");
+          return res.render("profile", { error: "Error al cerrar la sesión" });
         } else {
           return res.redirect("/login");
         }
       });
     } catch (error) {
-      CustomError.createError({
-        name: "logout error",
-        cause: logoutError(),
-        message: "Error al cerrar la sesión",
-        errorCode: EError.AUTH_ERROR,
-      });
+      logger.error("logout: Error al cerrar la sesión");
+      res.render("logout", { error: "Error al cerrar la sesión" });
+    }
+  };
+
+  static getUsers = async (req, res) => {
+    try {
+      const users = await usersDao.getUsers();
+      res.json({ status: "success", data: users });
+    } catch (error) {
+      logger.error("get users: Error al obtener los usuarios");
+      res.json({ status: "error", error: "Error al obtener los usuarios" });
+    }
+  };
+
+  static getUserById = async (req, res) => {
+    try {
+      const { uid } = req.params;
+      const user = await usersDao.getUserById(uid);
+      res.json({ status: "success", data: user });
+    } catch (error) {
+      logger.error("get user by id: Error al obtener el usuario");
+      res.json({ status: "error", error: "Error al obtener el usuario" });
     }
   };
 }

@@ -22,7 +22,7 @@ const ticketSchema = new mongoose.Schema({
   },
   purchase_products: {
     type: Object,
-    required: [true, "Debe haber productos para comprar"],
+    required: true,
   },
 });
 
