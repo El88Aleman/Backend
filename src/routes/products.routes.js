@@ -22,7 +22,7 @@ router.post(
   "/",
   uploader.single("thumbnail"),
   noSessionMiddleware,
-  checkRoleMiddleware(["admin"]),
+  checkRoleMiddleware(["admin", "premium"]),
   ProductsController.addProduct
 );
 
@@ -31,7 +31,7 @@ router.put(
   "/:pid",
   uploader.single("thumbnail"),
   noSessionMiddleware,
-  checkRoleMiddleware(["admin"]),
+  checkRoleMiddleware(["admin", "premium"]),
   ProductsController.updateProduct
 );
 
@@ -39,7 +39,7 @@ router.put(
 router.delete(
   "/:pid",
   noSessionMiddleware,
-  checkRoleMiddleware(["admin"]),
+  checkRoleMiddleware(["admin", "premium"]),
   ProductsController.deleteProduct
 );
 

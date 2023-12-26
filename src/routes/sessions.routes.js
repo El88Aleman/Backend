@@ -1,12 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
 import { config } from "../config/config.js";
-import { checkRoleMiddleware } from "../middlewares/auth.js";
 import { SessionsController } from "../controllers/sessions.controller.js";
 
 const router = Router();
 
-// Signup
+// Signup (POST: http://localhost:8080/api/sessions/signup)
 router.post(
   "/signup",
   passport.authenticate("signupLocalStrategy", {
@@ -31,7 +30,7 @@ router.get(
   SessionsController.redirectProducts
 );
 
-// Login
+// Login (POST: http://localhost:8080/api/sessions/login)
 router.post(
   "/login",
   passport.authenticate("loginLocalStrategy", {
@@ -43,21 +42,13 @@ router.post(
 // Fail login
 router.get("/fail-login", SessionsController.failLogin);
 
-// Logout
+// Restablecer contraseña
+router.post("/forgot-password", SessionsController.forgotPassword);
+
+// Nueva contraseña
+router.post("/reset-password", SessionsController.resetPassword);
+
+// Logout (GET: http://localhost:8080/api/sessions/logout)
 router.get("/logout", SessionsController.logout);
-
-// Todos los usuarios
-router.get(
-  "/users",
-  checkRoleMiddleware(["admin"]),
-  SessionsController.getUsers
-);
-
-// Un usuario
-router.get(
-  "/users/:uid",
-  checkRoleMiddleware(["admin"]),
-  SessionsController.getUserById
-);
 
 export { router as sessionsRouter };

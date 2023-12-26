@@ -34,7 +34,7 @@ socketClient.on("productsArray", (productsData) => {
                         </div>
                     </div>
                 </a>
-                <button class="btn-delete-product" data-product-id="${product._id}">Eliminar</button>
+                <button class="btn-delete-product" data-product-id="${product._id}" data-product-owner="${product.owner}">Eliminar</button>
             `;
 
       cardProductsContainer.querySelector(".item-list").innerHTML +=
@@ -45,12 +45,25 @@ socketClient.on("productsArray", (productsData) => {
 
     // Eliminar productos
     const deleteProductBtn = document.querySelectorAll(".btn-delete-product");
+    const addProductForm = document.getElementById("addProductForm");
+    const userId = addProductForm.getAttribute("data-user-id");
+    const userRole = addProductForm.getAttribute("data-user-role");
 
     deleteProductBtn.forEach((btn) => {
       btn.addEventListener("click", (e) => {
         const productId = e.target.getAttribute("data-product-id");
-        if (confirm("¿Queres eliminar este producto?")) {
-          socketClient.emit("deleteProduct", productId);
+        const productOwner = e.target.getAttribute("data-product-owner");
+
+        if (
+          (userRole === "premium" &&
+            productOwner.toString() === userId.toString()) ||
+          userRole === "admin"
+        ) {
+          if (confirm("¿Querés eliminar este producto?")) {
+            socketClient.emit("deleteProduct", productId);
+          }
+        } else {
+          alert("No tenés permisos para eliminar este producto");
         }
       });
     });
@@ -61,10 +74,10 @@ socketClient.on("productsArray", (productsData) => {
     categoryInfo.forEach((cat) => {
       const category = cat.getAttribute("data-category");
 
-      if (category === "negra") {
-        cat.classList.add("negra-category-card");
-      } else if (category === "blanca") {
+      if (category === "blanca") {
         cat.classList.add("blanca-category-card");
+      } else if (category === "negra") {
+        cat.classList.add("negra-category-card");
       }
     });
   } else {
@@ -77,6 +90,7 @@ socketClient.on("productsArray", (productsData) => {
 
 // Agregar productos
 const addProductForm = document.getElementById("addProductForm");
+const userId = addProductForm.getAttribute("data-user-id");
 
 addProductForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -90,6 +104,8 @@ addProductForm.addEventListener("submit", (e) => {
         ? value.split(",").map((item) => item.trim())
         : value;
   }
+
+  jsonData.owner = userId;
 
   socketClient.emit("addProduct", jsonData);
   addProductForm.reset();

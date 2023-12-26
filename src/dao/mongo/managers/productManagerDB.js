@@ -12,8 +12,12 @@ export class ProductManagerDB {
       const result = await this.model.find().lean();
       return result;
     } catch (error) {
-      logger.error("get products no filter: Error al obtener los productos");
-      throw new Error("Error al obtener los productos");
+      logger.error(
+        `get products no filter error: Error al obtener los productos: ${error}`
+      );
+      throw new Error(
+        `get products no filter error: Error al obtener los productos: ${error}`
+      );
     }
   }
 
@@ -23,8 +27,12 @@ export class ProductManagerDB {
       const result = await this.model.paginate(query, options);
       return result;
     } catch (error) {
-      logger.error("get products: Error al obtener los productos");
-      throw new Error("Error al obtener los productos");
+      logger.error(
+        `get products error: Error al obtener los productos: ${error}`
+      );
+      throw new Error(
+        `get products error: Error al obtener los productos: ${error}`
+      );
     }
   }
 
@@ -39,8 +47,12 @@ export class ProductManagerDB {
 
       return result;
     } catch (error) {
-      logger.error("get product by id: Error al obtener el producto");
-      throw new Error("Error al obtener el producto");
+      logger.error(
+        `get product by id error: Error al obtener el producto: ${error}`
+      );
+      throw new Error(
+        `get product by id error: Error al obtener el producto: ${error}`
+      );
     }
   }
 
@@ -50,8 +62,10 @@ export class ProductManagerDB {
       const result = await this.model.create(productInfo);
       return result;
     } catch (error) {
-      logger.error("add product: Error al crear el producto");
-      throw new Error("Error al crear el producto");
+      logger.error(`add product error: Error al crear el producto: ${error}`);
+      throw new Error(
+        `add product error: Error al crear el producto: ${error}`
+      );
     }
   }
 
@@ -70,8 +84,12 @@ export class ProductManagerDB {
 
       return result;
     } catch (error) {
-      logger.error("update product: Error al actualizar el producto");
-      throw new Error("Error al actualizar el producto");
+      logger.error(
+        `update product error: Error al actualizar el producto: ${error}`
+      );
+      throw new Error(
+        `update product error: Error al actualizar el producto: ${error}`
+      );
     }
   }
 
@@ -86,8 +104,12 @@ export class ProductManagerDB {
 
       return result;
     } catch (error) {
-      logger.error("delete product: Error al eliminar el producto");
-      throw new Error("Error al eliminar el producto");
+      logger.error(
+        `delete product error: Error al eliminar el producto: ${error}`
+      );
+      throw new Error(
+        `delete product error: Error al eliminar el producto: ${error}`
+      );
     }
   }
 }

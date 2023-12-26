@@ -23,7 +23,7 @@ export class CartsController {
         CustomError.createError({
           name: "get carts error",
           cause: databaseGetError(),
-          message: "Error al obtener los carritos",
+          message: "Error al obtener los carritos: ",
           errorCode: EError.DATABASE_ERROR,
         });
       }
@@ -44,7 +44,7 @@ export class CartsController {
         CustomError.createError({
           name: "get cart by id error",
           cause: paramError(cid),
-          message: "Error al obtener el carrito",
+          message: "Error al obtener el carrito: ",
           errorCode: EError.INVALID_PARAM_ERROR,
         });
       }
@@ -64,7 +64,7 @@ export class CartsController {
         CustomError.createError({
           name: "create cart error",
           cause: createCartError(),
-          message: "Error al crear el carrito",
+          message: "Error al crear el carrito: ",
           errorCode: EError.DATABASE_ERROR,
         });
       }
@@ -95,21 +95,34 @@ export class CartsController {
         CustomError.createError({
           name: "add product to cart error",
           cause: addProductToCartError(customQuantity),
-          message: "Error al agregar el producto al carrito",
+          message: "Error al agregar el producto al carrito: ",
           errorCode: EError.INVALID_BODY_ERROR,
         });
       }
 
-      const addedProductToCart = await CartsService.addProductToCart(
-        cid,
-        pid,
-        customQuantity
-      );
-      res.json({
-        status: "success",
-        message: "Producto agregado al carrito",
-        data: addedProductToCart,
-      });
+      if (
+        req.user.role === "premium" &&
+        product.owner.toString() === req.user._id.toString()
+      ) {
+        // Error customizado
+        CustomError.createError({
+          name: "add product to cart error",
+          cause: "No podés agregar al carrito tu propio producto",
+          message: "Error al agregar el producto al carrito: ",
+          errorCode: EError.INVALID_PARAM_ERROR,
+        });
+      } else {
+        const addedProductToCart = await CartsService.addProductToCart(
+          cid,
+          pid,
+          customQuantity
+        );
+        res.json({
+          status: "success",
+          message: "Producto agregado al carrito",
+          data: addedProductToCart,
+        });
+      }
     } catch (error) {
       next(error);
     }
@@ -128,7 +141,7 @@ export class CartsController {
         CustomError.createError({
           name: "update products in cart error",
           cause: updateProductsInCartError(newProducts),
-          message: "Error al validar los datos",
+          message: "Error al validar los datos: ",
           errorCode: EError.INVALID_BODY_ERROR,
         });
       }
@@ -148,6 +161,24 @@ export class CartsController {
             message: "Error al validar los datos",
             errorCode: EError.INVALID_BODY_ERROR,
           });
+        } else {
+          const productInfo = await ProductsService.getProductById(
+            product.product
+          );
+
+          if (
+            req.user.role === "premium" &&
+            productInfo.owner.toString() === req.user._id.toString()
+          ) {
+            // Error customizado
+            CustomError.createError({
+              name: "update products in cart error",
+              cause: "No podés agregar al carrito tu propio producto",
+              message: "Error al actualizar los productos en el carrito: ",
+              errorCode: EError.INVALID_BODY_ERROR,
+            });
+            return;
+          }
         }
       }
 
@@ -179,18 +210,33 @@ export class CartsController {
         CustomError.createError({
           name: "update product quantity in cart error",
           cause: updateProductQuantityInCartError(newQuantity),
-          message: "Error al actualizar la cantidad del producto en el carrito",
+          message:
+            "Error al actualizar la cantidad del producto en el carrito: ",
           errorCode: EError.INVALID_BODY_ERROR,
         });
       }
 
-      const updatedQuantityProductInCart =
-        await CartsService.updateProductQuantityInCart(cid, pid, newQuantity);
-      res.json({
-        status: "success",
-        message: "Cantidad del producto actualizada",
-        data: updatedQuantityProductInCart,
-      });
+      if (
+        req.user.role === "premium" &&
+        product.owner.toString() === req.user._id.toString()
+      ) {
+        // Error customizado
+        CustomError.createError({
+          name: "update product quantity in cart error",
+          cause: "No podés agregar al carrito tu propio producto",
+          message:
+            "Error al actualizar la cantidad del producto en el carrito: ",
+          errorCode: EError.INVALID_PARAM_ERROR,
+        });
+      } else {
+        const updatedQuantityProductInCart =
+          await CartsService.updateProductQuantityInCart(cid, pid, newQuantity);
+        res.json({
+          status: "success",
+          message: "Cantidad del producto actualizada",
+          data: updatedQuantityProductInCart,
+        });
+      }
     } catch (error) {
       next(error);
     }
@@ -209,7 +255,7 @@ export class CartsController {
         CustomError.createError({
           name: "delete all products in cart error",
           cause: paramError(cid),
-          message: "Error al obtener el carrito a vaciar",
+          message: "Error al obtener el carrito a vaciar: ",
           errorCode: EError.INVALID_PARAM_ERROR,
         });
       }
@@ -241,7 +287,7 @@ export class CartsController {
         CustomError.createError({
           name: "delete product in cart error",
           cause: paramError(cid),
-          message: "Error al obtener el carrito a actualizar",
+          message: "Error al obtener el carrito a actualizar: ",
           errorCode: EError.INVALID_PARAM_ERROR,
         });
       }
@@ -250,7 +296,7 @@ export class CartsController {
         CustomError.createError({
           name: "delete product in cart error",
           cause: paramError(pid),
-          message: "Error al obtener el producto a eliminar",
+          message: "Error al obtener el producto a eliminar: ",
           errorCode: EError.INVALID_PARAM_ERROR,
         });
       }

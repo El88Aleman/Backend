@@ -15,7 +15,7 @@ router.get("/", noSessionMiddleware, ViewsController.renderHome);
 router.get(
   "/realtimeproducts",
   noSessionMiddleware,
-  checkRoleMiddleware(["admin"]),
+  checkRoleMiddleware(["admin", "premium"]),
   ViewsController.renderRealTimeProducts
 );
 
@@ -33,7 +33,7 @@ router.get(
 router.get(
   "/carts/:cid",
   noSessionMiddleware,
-  checkRoleMiddleware(["usuario"]),
+  checkRoleMiddleware(["usuario", "premium"]),
   ViewsController.renderCart
 );
 
@@ -42,6 +42,12 @@ router.get("/signup", sessionMiddleware, ViewsController.renderSignup);
 
 // Login
 router.get("/login", sessionMiddleware, ViewsController.renderLogin);
+
+// Restablecer contraseña
+router.get("/forgot-password", ViewsController.renderForgotPassword);
+
+// Nueva contraseña
+router.get("/reset-password", ViewsController.renderResetPassword);
 
 // Perfil
 router.get("/profile", noSessionMiddleware, ViewsController.renderProfile);

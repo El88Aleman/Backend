@@ -48,7 +48,7 @@ export class TicketsController {
         const newTicket = {
           code: uuidv4(),
           purchase_datetime: new Date().toLocaleString("en-UY", {
-            timeZone: "America/Buenos Aires",
+            timeZone: "America/Montevideo",
           }),
           amount: ticketProducts.reduce(
             (acc, prod) => acc + prod.quantity * prod.product.price,
@@ -134,7 +134,7 @@ export class TicketsController {
         CustomError.createError({
           name: "get tickets error",
           cause: databaseGetError(),
-          message: "Error al obtener los tickets de compra",
+          message: "Error al obtener los tickets de compra: ",
           errorCode: EError.DATABASE_ERROR,
         });
       }
@@ -155,7 +155,7 @@ export class TicketsController {
         CustomError.createError({
           name: "get ticket by id error",
           cause: paramError(tid),
-          message: "Error al obtener el ticket de compra",
+          message: "Error al obtener el ticket de compra: ",
           errorCode: EError.INVALID_PARAM_ERROR,
         });
       }

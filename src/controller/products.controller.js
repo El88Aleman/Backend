@@ -1,5 +1,6 @@
 import { ProductsService } from "../services/products.service.js";
 import { productsModel } from "../dao/mongo/models/products.model.js";
+import { usersModel } from "../dao/mongo/models/users.model.js";
 import { generateProductMock } from "../helpers/mock.js";
 import { EError } from "../enums/EError.js";
 import { CustomError } from "../services/customErrors/customError.service.js";
@@ -57,7 +58,7 @@ export class ProductsController {
         CustomError.createError({
           name: "get products error",
           cause: databaseGetError(),
-          message: "Error al obtener los productos",
+          message: "Error al obtener los productos: ",
           errorCode: EError.DATABASE_ERROR,
         });
       }
@@ -105,7 +106,7 @@ export class ProductsController {
         CustomError.createError({
           name: "get product by id error",
           cause: paramError(pid),
-          message: "Error al obtener el producto",
+          message: "Error al obtener el producto: ",
           errorCode: EError.INVALID_PARAM_ERROR,
         });
       }
@@ -121,6 +122,25 @@ export class ProductsController {
       const productInfo = req.body;
       const thumbnailFile = req.file ? req.file.filename : undefined;
 
+      productInfo.thumbnail = thumbnailFile;
+
+      if (req.user.role === "premium" || req.user.role === "admin") {
+        productInfo.owner = req.user._id;
+
+        if (!productInfo.owner || productInfo.owner === "") {
+          const adminInfo = await usersModel.findOne({ role: "admin" });
+          productInfo.owner = adminInfo?._id;
+        }
+      } else {
+        // Error customizado
+        CustomError.createError({
+          name: "add product error",
+          cause: "Solo los admin o usuarios premium pueden agregar productos",
+          message: "Error al agregar el producto: ",
+          errorCode: EError.INVALID_BODY_ERROR,
+        });
+      }
+
       // Error customizado
       const newProduct = new productsModel(productInfo);
 
@@ -130,12 +150,10 @@ export class ProductsController {
         CustomError.createError({
           name: "add product error",
           cause: addProductError(productInfo),
-          message: "Error al validar los datos",
+          message: "Error al validar los datos: ",
           errorCode: EError.INVALID_BODY_ERROR,
         });
       }
-
-      newProduct.thumbnail = thumbnailFile;
 
       const addedProduct = await ProductsService.addProduct(productInfo);
       res.json({
@@ -153,41 +171,53 @@ export class ProductsController {
       const { pid } = req.params;
       const updateFields = req.body;
       const thumbnailFile = req.file ? req.file.filename : undefined;
-
-      // Error customizado
+      const product = await ProductsService.getProductById(pid);
       const { title, description, code, price, stock, category } = updateFields;
-
-      if (
-        (title && typeof title !== "string") ||
-        (description && !Array.isArray(description)) ||
-        (code && typeof code !== "string") ||
-        (price && typeof price !== "number") ||
-        (stock && typeof stock !== "number") ||
-        (category &&
-          (typeof category !== "string" ||
-            (category !== "blanca" && category !== "negra"))) ||
-        price < 0 ||
-        stock < 0
-      ) {
-        CustomError.createError({
-          name: "update product error",
-          cause: updateProductError(updateFields),
-          message: "Error al validar los datos",
-          errorCode: EError.INVALID_BODY_ERROR,
-        });
-      }
 
       updateFields.thumbnail = thumbnailFile;
 
-      const updatedProduct = await ProductsService.updateProduct(
-        pid,
-        updateFields
-      );
-      res.json({
-        status: "success",
-        message: "Producto actualizado",
-        data: updatedProduct,
-      });
+      if (
+        (req.user.role === "premium" &&
+          product.owner.toString() === req.user._id.toString()) ||
+        req.user.role === "admin"
+      ) {
+        // Error customizado
+        if (
+          (title !== undefined && typeof title !== "string") ||
+          (description !== undefined && !Array.isArray(description)) ||
+          (code !== undefined && typeof code !== "string") ||
+          (price !== undefined && (typeof price !== "number" || price < 0)) ||
+          (stock !== undefined && (typeof stock !== "number" || stock < 0)) ||
+          (category !== undefined &&
+            (typeof category !== "string" ||
+              (category !== "blanca" && category !== "negra")))
+        ) {
+          CustomError.createError({
+            name: "update product error",
+            cause: updateProductError(updateFields),
+            message: "Error al validar los datos: ",
+            errorCode: EError.INVALID_BODY_ERROR,
+          });
+        } else {
+          const updatedProduct = await ProductsService.updateProduct(
+            pid,
+            updateFields
+          );
+          res.json({
+            status: "success",
+            message: "Producto actualizado",
+            data: updatedProduct,
+          });
+        }
+      } else {
+        // Error customizado
+        CustomError.createError({
+          name: "update product error",
+          cause: "No tenés permisos para actualizar este producto",
+          message: "Error al actualizar el producto: ",
+          errorCode: EError.INVALID_PARAM_ERROR,
+        });
+      }
     } catch (error) {
       next(error);
     }
@@ -196,23 +226,28 @@ export class ProductsController {
   static deleteProduct = async (req, res, next) => {
     try {
       const { pid } = req.params;
-      const deletedProduct = await ProductsService.deleteProduct(pid);
+      const product = await ProductsService.getProductById(pid);
 
-      // Error customizado
-      if (!deletedProduct) {
+      if (
+        (req.user.role === "premium" &&
+          product.owner.toString() === req.user._id.toString()) ||
+        req.user.role === "admin"
+      ) {
+        const deletedProduct = await ProductsService.deleteProduct(pid);
+        res.json({
+          status: "success",
+          message: "Producto eliminado",
+          data: deletedProduct,
+        });
+      } else {
+        // Error customizado
         CustomError.createError({
           name: "delete product error",
-          cause: paramError(pid),
-          message: "Error al obtener el producto a eliminar",
+          cause: "No tenés permisos para eliminar este producto",
+          message: "Error al eliminar el producto: ",
           errorCode: EError.INVALID_PARAM_ERROR,
         });
       }
-
-      res.json({
-        status: "success",
-        message: "Producto eliminado",
-        data: deletedProduct,
-      });
     } catch (error) {
       next(error);
     }

@@ -153,8 +153,8 @@ export class ProductManagerFS {
                 typeof updateFields.stock !== "number")) ||
             (updateFields.category &&
               (typeof updateFields.category !== "string" ||
-                (updateFields.category !== "blanca" &&
-                  updateFields.category !== "negra"))) ||
+                (updateFields.category !== "vegano" &&
+                  updateFields.category !== "vegetariano"))) ||
             (updateFields.thumbnail &&
               typeof updateFields.thumbnail !== "string")
           ) {

@@ -31,7 +31,7 @@ router.post("/", noSessionMiddleware, CartsController.createCart);
 router.post(
   "/:cid/product/:pid",
   noSessionMiddleware,
-  checkRoleMiddleware(["usuario"]),
+  checkRoleMiddleware(["usuario", "premium"]),
   CartsController.addProductToCart
 );
 
@@ -39,7 +39,7 @@ router.post(
 router.put(
   "/:cid",
   noSessionMiddleware,
-  checkRoleMiddleware(["usuario"]),
+  checkRoleMiddleware(["usuario", "premium"]),
   CartsController.updateProductsInCart
 );
 
@@ -47,7 +47,7 @@ router.put(
 router.put(
   "/:cid/products/:pid",
   noSessionMiddleware,
-  checkRoleMiddleware(["usuario"]),
+  checkRoleMiddleware(["usuario", "premium"]),
   CartsController.updateProductQuantityInCart
 );
 
@@ -69,7 +69,7 @@ router.delete(
 router.post(
   "/:cid/purchase",
   noSessionMiddleware,
-  checkRoleMiddleware(["usuario"]),
+  checkRoleMiddleware(["usuario", "premium"]),
   TicketsController.purchaseCart
 );
 
