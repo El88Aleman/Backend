@@ -28,7 +28,7 @@ export class CartsController {
         });
       }
 
-      res.json({ status: "success", data: carts });
+      res.json({ status: "success", carts });
     } catch (error) {
       next(error);
     }
@@ -49,7 +49,7 @@ export class CartsController {
         });
       }
 
-      res.json({ status: "success", data: cart });
+      res.json({ status: "success", cart });
     } catch (error) {
       next(error);
     }
@@ -69,11 +69,7 @@ export class CartsController {
         });
       }
 
-      res.json({
-        status: "success",
-        message: "Carrito creado",
-        data: createdCart,
-      });
+      res.json({ status: "success", message: "Carrito creado", createdCart });
     } catch (error) {
       next(error);
     }
@@ -120,7 +116,7 @@ export class CartsController {
         res.json({
           status: "success",
           message: "Producto agregado al carrito",
-          data: addedProductToCart,
+          addedProductToCart,
         });
       }
     } catch (error) {
@@ -189,7 +185,7 @@ export class CartsController {
       res.json({
         status: "success",
         message: "Productos en el carrito actualizados",
-        data: updatedProductsInCart,
+        updatedProductsInCart,
       });
     } catch (error) {
       next(error);
@@ -234,7 +230,7 @@ export class CartsController {
         res.json({
           status: "success",
           message: "Cantidad del producto actualizada",
-          data: updatedQuantityProductInCart,
+          updatedQuantityProductInCart,
         });
       }
     } catch (error) {
@@ -264,11 +260,7 @@ export class CartsController {
         cid,
         newCart
       );
-      res.json({
-        status: "success",
-        message: "Carrito vaciado",
-        data: emptyNewCart,
-      });
+      res.json({ status: "success", message: "Carrito vaciado", emptyNewCart });
     } catch (error) {
       next(error);
     }
@@ -305,7 +297,7 @@ export class CartsController {
       res.json({
         status: "success",
         message: "Producto eliminado del carrito",
-        data: newCart,
+        newCart,
       });
     } catch (error) {
       next(error);

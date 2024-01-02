@@ -48,7 +48,7 @@ export class TicketsController {
         const newTicket = {
           code: uuidv4(),
           purchase_datetime: new Date().toLocaleString("en-UY", {
-            timeZone: "America/Montevideo",
+            timeZone: "America/Buenos Aires",
           }),
           amount: ticketProducts.reduce(
             (acc, prod) => acc + prod.quantity * prod.product.price,
@@ -139,7 +139,7 @@ export class TicketsController {
         });
       }
 
-      res.json({ status: "success", data: tickets });
+      res.json({ status: "success", tickets });
     } catch (error) {
       next(error);
     }
@@ -160,7 +160,7 @@ export class TicketsController {
         });
       }
 
-      res.json({ status: "success", data: ticket });
+      res.json({ status: "success", ticket });
     } catch (error) {
       next(error);
     }
