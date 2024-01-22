@@ -1,7 +1,7 @@
 paths:
   /api/products:
     get:
-      summary: Obtener todos los productos
+      summary: Obtener todos los productos (Iniciar sesión)
       tags:
         - Productos
       responses:
@@ -24,7 +24,7 @@ paths:
                       payload:
                         type: array
                         items:
-                          $ref: "#components/schemas/product"
+                          $ref: "#components/schemas/Product"
                       totalPages:
                         type: number
                         example: 3
@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
     post:
       summary: Agregar un producto (Iniciar sesión con admin o premium)
@@ -66,30 +66,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requestBodies/addUpdateProduct"
+              $ref: "#components/requestBodies/AddUpdateProduct"
       responses:
         "200":
           description: Producto creado con éxito
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/addProductSuccess"
+                $ref: "#components/schemas/AddProductSuccess"
         "401":
           description: Este usuario no tiene permisos para agregar un producto
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se agregó el producto por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
   /api/products/{pid}:
     get:
-      summary: Obtener un producto por Id
+      summary: Obtener un producto por Id (Iniciar sesión)
       tags:
         - Productos
       parameters:
@@ -111,19 +111,19 @@ paths:
                     type: string
                     example: success
                   product:
-                    $ref: "#components/schemas/product"
+                    $ref: "#components/schemas/Product"
         "404":
           description: El producto no fue encontrado
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se obtuvo el producto por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
     put:
       summary: Actualizar un producto (Iniciar sesión con admin o premium)
@@ -142,32 +142,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requestBodies/addUpdateProduct"
+              $ref: "#components/requestBodies/AddUpdateProduct"
       responses:
         "200":
           description: Producto actualizado con éxito
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/updateProductSuccess"
+                $ref: "#components/schemas/UpdateProductSuccess"
         "401":
           description: Este usuario no tiene permisos para actualizar un producto
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "404":
           description: El producto no fue encontrado
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se actualizó el producto por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
     delete:
       summary: Eliminar un producto por Id (Iniciar sesión con admin o premium)
@@ -186,29 +186,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/deleteProductSuccess"
+                $ref: "#components/schemas/DeleteProductSuccess"
         "401":
           description: Este usuario no tiene permisos para eliminar un producto
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "404":
           description: El producto a eliminar no fue encontrado
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se eliminó el producto por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
 components:
   schemas:
-    product:
+    Product:
       type: object
       properties:
         _id:
@@ -232,7 +232,7 @@ components:
           description: Stock del producto (mínimo 0)
         category:
           type: string
-          description: Categoría del producto ("blanca", "negra")
+          description: Categoría del producto ("vegano", "vegetariano")
         thumbnail:
           type: string
           description: Imagen del producto
@@ -242,16 +242,16 @@ components:
           description: Id del propietario del producto (generado por la base de datos)
       example:
         _id: fvdff34534t54t45t
-          title: "Remera Oversize Full Dominion"
-          description: ["Oversize"]
-          code: vdg54yh
-          price: 8900
-          stock: 20
-          category: negra
-          thumbnail: "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166527/zwr9mfqcbmfazgeywwmk.jpg"
-          owner: hjsg892778234sde32
+        title: Remera Oversize Abstract
+        description: [Oversize]
+        code: vdg54yh
+        price: 8900
+        stock: 15
+        category: negra
+        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg
+        owner: hjsg892778234sde32
 
-    addProductSuccess:
+    AddProductSuccess:
       type: object
       properties:
         status:
@@ -265,16 +265,16 @@ components:
         message: Producto creado
         addedProduct:
           _id: fvdff34534t54t45t
-          title: "Remera Oversize Full Dominion"
-          description: ["Oversize"]
-          code: vdg54yh
-          price: 8900
-          stock: 20
-          category: negra
-          thumbnail: "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166527/zwr9mfqcbmfazgeywwmk.jpg"
-          owner: hjsg892778234sde32
+        title: Remera Oversize Abstract
+        description: [Oversize]
+        code: vdg54yh
+        price: 8900
+        stock: 15
+        category: negra
+        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg
+        owner: hjsg892778234sde32
 
-    updateProductSuccess:
+    UpdateProductSuccess:
       type: object
       properties:
         status:
@@ -288,16 +288,16 @@ components:
         message: Producto actualizado
         updatedProduct:
           _id: fvdff34534t54t45t
-          title: "Remera Oversize Full Dominion"
-          description: ["Oversize"]
-          code: vdg54yh
-          price: 8900
-          stock: 20
-          category: negra
-          thumbnail: "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166527/zwr9mfqcbmfazgeywwmk.jpg"
-          owner: hjsg892778234sde32
+        title: Remera Oversize Abstract
+        description: [Oversize]
+        code: vdg54yh
+        price: 8900
+        stock: 15
+        category: negra
+        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg
+        owner: hjsg892778234sde32
 
-    deleteProductSuccess:
+    DeleteProductSuccess:
       type: object
       properties:
         status:
@@ -311,16 +311,16 @@ components:
         message: Producto eliminado
         deletedProduct:
           _id: fvdff34534t54t45t
-          title: "Remera Oversize Full Dominion"
-          description: ["Oversize"]
-          code: vdg54yh
-          price: 8900
-          stock: 20
-          category: negra
-          thumbnail: "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166527/zwr9mfqcbmfazgeywwmk.jpg"
-          owner: hjsg892778234sde32
+        title: Remera Oversize Abstract
+        description: [Oversize]
+        code: vdg54yh
+        price: 8900
+        stock: 15
+        category: negra
+        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg
+        owner: hjsg892778234sde32
 
-    errorMessage:
+    ErrorMessage:
       type: object
       properties:
         status:
@@ -332,7 +332,7 @@ components:
         error: Ocurrió un error
 
   requestBodies:
-    addUpdateProduct:
+    AddUpdateProduct:
       type: object
       properties:
         title:
@@ -357,10 +357,10 @@ components:
           type: string
           description: Imagen del producto
       example:
-          title: "Remera Oversize Full Dominion"
-          description: ["Oversize"]
-          code: vdg54yh
-          price: 8900
-          stock: 20
-          category: negra
-          thumbnail: "https://res.cloudinary.com/dfcnmxndf/image/upload/v1689166527/zwr9mfqcbmfazgeywwmk.jpg"
+        title: Remera Oversize Abstract
+        description: [Oversize]
+        code: vdg54yh
+        price: 8900
+        stock: 15
+        category: negra
+        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg

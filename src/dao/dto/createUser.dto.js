@@ -1,8 +1,10 @@
 export class CreateUserDto {
   constructor(userInfo) {
+    this.avatar = userInfo.avatar;
     this.full_name = !userInfo.github_user
       ? `${userInfo.first_name} ${userInfo.last_name}`
       : userInfo.github_name;
+    this.age = userInfo.age;
     this.role = userInfo.role;
     this.cart = userInfo.cart;
     this.github_user = userInfo.github_user;
@@ -11,7 +13,6 @@ export class CreateUserDto {
       this.first_name = userInfo.first_name;
       this.last_name = userInfo.last_name;
       this.email = userInfo.email;
-      this.age = userInfo.age;
       this.password = userInfo.password;
 
       // Para evitar errores con el unique de github_username

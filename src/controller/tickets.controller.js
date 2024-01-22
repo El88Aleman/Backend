@@ -47,9 +47,7 @@ export class TicketsController {
         // Crear ticket
         const newTicket = {
           code: uuidv4(),
-          purchase_datetime: new Date().toLocaleString("en-UY", {
-            timeZone: "America/Buenos Aires",
-          }),
+          purchase_datetime: new Date(),
           amount: ticketProducts.reduce(
             (acc, prod) => acc + prod.quantity * prod.product.price,
             0

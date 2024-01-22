@@ -30,10 +30,11 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["blanca", "negra"],
+    enum: ["negra", "blanca"],
   },
   thumbnail: {
     type: String,
+    default: "noImgProduct-product.jpg",
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

@@ -34,6 +34,7 @@ export const initializePassport = () => {
 
           // Si el usuario no está registrado
           const newUserDto = new CreateUserDto({
+            avatar: req.file?.filename,
             first_name,
             last_name,
             email: username,
@@ -113,6 +114,10 @@ export const initializePassport = () => {
           if (!isValidPassword(password, user)) {
             return done(null, false);
           }
+
+          // Nueva fecha de inicio de sesión
+          user.last_connection = new Date();
+          await UsersService.updateUser(user._id, user);
 
           return done(null, user);
         } catch (error) {

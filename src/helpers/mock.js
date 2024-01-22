@@ -10,6 +10,7 @@ export const generateProductMock = () => {
     stock: parseInt(faker.random.numeric(2)),
     category: faker.commerce.department(),
     thumbnail: faker.image.imageUrl(),
+    owner: faker.internet.email(),
   };
 };
 

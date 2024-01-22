@@ -1,7 +1,7 @@
 paths:
   /api/carts:
     get:
-      summary: Obtener todos los carritos
+      summary: Obtener todos los carritos (Iniciar sesión)
       tags:
         - Carritos
       responses:
@@ -18,16 +18,16 @@ paths:
                   carts:
                     type: array
                     items:
-                      $ref: "#components/schemas/cart"
+                      $ref: "#components/schemas/Cart"
         "500":
           description: No se obtuvieron los carritos por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
     post:
-      summary: Crear un carrito
+      summary: Crear un carrito (Iniciar sesión)
       tags:
         - Carritos
       responses:
@@ -36,17 +36,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/createCartSuccess"
+                $ref: "#components/schemas/CreateCartSuccess"
         "500":
           description: No se creó el carrito por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
   /api/carts/{cid}:
     get:
-      summary: Obtener un carrito por Id
+      summary: Obtener un carrito por Id (Iniciar sesión)
       tags:
         - Carritos
       parameters:
@@ -68,19 +68,19 @@ paths:
                     type: string
                     example: success
                   cart:
-                    $ref: "#components/schemas/cart"
+                    $ref: "#components/schemas/Cart"
         "404":
           description: El carrito no fue encontrado
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se obtuvo el carrito por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
     put:
       summary: Actualizar un carrito con un array de productos (Iniciar sesión con usuario o premium)
@@ -99,35 +99,35 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requestBodies/updateProductsInCart"
+              $ref: "#components/requestBodies/UpdateProductsInCart"
       responses:
         "200":
           description: Carrito actualizado con éxito
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/updateProductsInCartSuccess"
+                $ref: "#components/schemas/UpdateProductsInCartSuccess"
         "401":
           description: Este usuario no tiene permisos para actualizar un carrito
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "404":
           description: El carrito no fue encontrado
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se actualizó el carrito por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
     delete:
-      summary: Eliminar todos los productos de un carrito
+      summary: Eliminar todos los productos de un carrito (Iniciar sesión)
       tags:
         - Carritos
       parameters:
@@ -143,19 +143,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/deleteAllProductsInCartSuccess"
+                $ref: "#components/schemas/DeleteAllProductsInCartSuccess"
         "404":
           description: El carrito a vaciar no fue encontrado
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se vació el carrito por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
   /api/carts/{cid}/product/{pid}:
     post:
@@ -181,32 +181,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requestBodies/quantityAddProductToCart"
+              $ref: "#components/requestBodies/QuantityAddProductToCart"
       responses:
         "200":
           description: Producto agregado al carrito con éxito
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/addProductToCartSuccess"
+                $ref: "#components/schemas/AddProductToCartSuccess"
         "401":
           description: Este usuario no tiene permisos para agregar un producto al carrito
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "404":
           description: El carrito o el producto no fueron encontrados
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se agregó el producto al carrito por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
   /api/carts/{cid}/products/{pid}:
     put:
@@ -245,28 +245,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/updateProductQuantityInCartSuccess"
+                $ref: "#components/schemas/UpdateProductQuantityInCartSuccess"
         "401":
           description: Este usuario no tiene permisos para actualizar la cantidad de un producto en un carrito
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "404":
           description: El carrito o el producto no fueron encontrados
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se actualizó la cantidad del producto en el carrito por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
     delete:
-      summary: Eliminar un producto del carrito
+      summary: Eliminar un producto del carrito (Iniciar sesión)
       tags:
         - Carritos
       parameters:
@@ -288,23 +288,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/deleteProductInCartSuccess"
+                $ref: "#components/schemas/DeleteProductInCartSuccess"
         "404":
           description: El carrito o el producto no fueron encontrados
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se eliminó el producto del carrito por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
   /api/carts/tickets:
     get:
-      summary: Obtener todos los tickets de compra
+      summary: Obtener todos los tickets de compra (Iniciar sesión)
       tags:
         - Carritos
       responses:
@@ -321,17 +321,17 @@ paths:
                   tickets:
                     type: array
                     items:
-                      $ref: "#components/schemas/ticket"
+                      $ref: "#components/schemas/Ticket"
         "500":
           description: No se obtuvieron los tickets de compra por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
   /api/carts/{cid}/tickets/{tid}:
     get:
-      summary: Obtener un ticket de compra por ID
+      summary: Obtener un ticket de compra por ID (Iniciar sesión)
       tags:
         - Carritos
       parameters:
@@ -359,19 +359,19 @@ paths:
                     type: string
                     example: success
                   ticket:
-                    $ref: "#components/schemas/ticket"
+                    $ref: "#components/schemas/Ticket"
         "404":
           description: El ticket de compra o el carrito no fueron encontrados
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se obtuvo el ticket de compra por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
   /api/carts/{cid}/purchase:
     post:
@@ -391,29 +391,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/purchaseCartSuccess"
+                $ref: "#components/schemas/PurchaseCartSuccess"
         "401":
           description: Este usuario no tiene permisos para realizar una compra
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "404":
           description: El carrito no fue encontrado
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
         "500":
           description: No se realizó la compra por un error en el servidor
           content:
             application/json:
               schema:
-                $ref: "#components/schemas/errorMessage"
+                $ref: "#components/schemas/ErrorMessage"
 
 components:
   schemas:
-    cart:
+    Cart:
       type: object
       properties:
         _id:
@@ -471,11 +471,11 @@ components:
               price: 200
               stock: 40
               category: vegetariano
-              thumbnail: 1697091632561-item-9.jpg
+              thumbnail: vegg1-product-item-9.jpg
               owner: hjsg892778234sde32
             quantity: 1
 
-    createCartSuccess:
+    CreateCartSuccess:
       type: object
       properties:
         status:
@@ -501,7 +501,7 @@ components:
           _id: fedvjern4389r34r
           products: []
 
-    addProductToCartSuccess:
+    AddProductToCartSuccess:
       type: object
       properties:
         status:
@@ -519,7 +519,7 @@ components:
             - product: fvdff34534t54t45t
               quantity: 1
 
-    updateProductsInCartSuccess:
+    UpdateProductsInCartSuccess:
       type: object
       properties:
         status:
@@ -537,7 +537,7 @@ components:
             - product: fvdff34534t54t45t
               quantity: 1
 
-    updateProductQuantityInCartSuccess:
+    UpdateProductQuantityInCartSuccess:
       type: object
       properties:
         status:
@@ -555,7 +555,7 @@ components:
             - product: fvdff34534t54t45t
               quantity: 6
 
-    deleteAllProductsInCartSuccess:
+    DeleteAllProductsInCartSuccess:
       type: object
       properties:
         status:
@@ -571,7 +571,7 @@ components:
           _id: fvdff34534t54t45t
           products: []
 
-    deleteProductInCartSuccess:
+    DeleteProductInCartSuccess:
       type: object
       properties:
         status:
@@ -587,7 +587,7 @@ components:
           _id: fvdff34534t54t45t
           products: []
 
-    ticket:
+    Ticket:
       type: object
       properties:
         _id:
@@ -598,7 +598,7 @@ components:
           type: string
           description: Código de la compra (único)
         purchase_datetime:
-          type: string
+          type: date
           description: Fecha de la commpra
         amount:
           type: number
@@ -613,23 +613,23 @@ components:
       example:
         _id: vnejnvi3j345435
         code: vmk4r3-44343-fe343
-        purchase_datetime: 12/28/2023, 5:28:50 PM
+        purchase_datetime: 2024-01-17T19:52:02.623+00:00
         amount: 1000
-        purchaser: lu@gmail.com
+        purchaser: francobertone10@gmail.com
         purchase_products:
           - product:
               _id: fvdff34534t54t45t
-              title: Papas fritas con cheddar
-              description: [Papa, Queso Cheddar, Cebolla de verdeo]
+              title: Remera Oversize The Rose
+              description: [Oversize]
               code: vdg54yh
-              price: 200
-              stock: 40
-              category: vegetariano
-              thumbnail: 1697091632561-item-9.jpg
+              price: 8900
+              stock: 20
+              category: blanca
+              thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167338/hr38owfqdmugljsm9vet.jpg
               owner: hjsg892778234sde32
             quantity: 5
 
-    purchaseCartSuccess:
+    PurchaseCartSuccess:
       type: object
       properties:
         status:
@@ -654,23 +654,23 @@ components:
         newPurchase:
           _id: vnejnvi3j345435
           code: vmk4r3-44343-fe343
-          purchase_datetime: 12/28/2023, 5:28:50 PM
+          purchase_datetime: 2024-01-17T19:52:02.623+00:00
           amount: 1000
-          purchaser: lu@gmail.com
+          purchaser: francobertone10@gmail.com
           purchase_products:
             - product:
                 _id: fvdff34534t54t45t
-                title: Papas fritas con cheddar
-                description: [Papa, Queso Cheddar, Cebolla de verdeo]
+                title: Remera Oversize Pounding Heart
+                description: [Oversize]
                 code: vdg54yh
-                price: 200
-                stock: 40
-                category: vegetariano
-                thumbnail: 1697091632561-item-9.jpg
+                price: 8900
+                stock: 15
+                category: blanca
+                thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167337/bvnl2bcipgsa4fjyzplc.jpg
                 owner: hjsg892778234sde32
               quantity: 5
 
-    errorMessage:
+    ErrorMessage:
       type: object
       properties:
         status:
@@ -682,7 +682,7 @@ components:
         error: Ocurrió un error
 
   requestBodies:
-    quantityAddProductToCart:
+    QuantityAddProductToCart:
       type: object
       properties:
         quantity:
@@ -691,7 +691,7 @@ components:
       example:
         quantity: 1
 
-    updateProductsInCart:
+    UpdateProductsInCart:
       type: object
       properties:
         newProducts:

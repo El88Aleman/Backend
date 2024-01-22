@@ -119,9 +119,8 @@ export class ProductsController {
   static addProduct = async (req, res, next) => {
     try {
       const productInfo = req.body;
-      const thumbnailFile = req.file ? req.file.filename : undefined;
 
-      productInfo.thumbnail = thumbnailFile;
+      productInfo.thumbnail = req.file?.filename;
 
       if (req.user.role === "premium" || req.user.role === "admin") {
         productInfo.owner = req.user._id;
@@ -164,11 +163,30 @@ export class ProductsController {
   static updateProduct = async (req, res, next) => {
     try {
       const { pid } = req.params;
-      const updateFields = req.body;
-      const thumbnailFile = req.file ? req.file.filename : undefined;
+      const { title, description, code, price, stock, category } = req.body;
+      const thumbnail = req.file?.filename;
       const product = await ProductsService.getProductById(pid);
 
-      updateFields.thumbnail = thumbnailFile;
+      // Error customizado
+      if (!product) {
+        CustomError.createError({
+          name: "update product error",
+          cause: paramError(pid),
+          message: "Error al actualizar el producto: ",
+          errorCode: EError.INVALID_PARAM_ERROR,
+        });
+      }
+
+      // Campos
+      const updateFields = {
+        title: title || product.title,
+        description: description || product.description,
+        code: code || product.code,
+        price: price || product.price,
+        stock: stock || product.stock,
+        category: category || product.category,
+        thumbnail: thumbnail || product.thumbnail,
+      };
 
       if (
         (req.user.role === "premium" &&

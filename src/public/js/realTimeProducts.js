@@ -20,7 +20,7 @@ socketClient.on("productsArray", (productsData) => {
 
       if (product.thumbnail) {
         cardProduct += `
-                    <img class="card-img-top" src="/assets/imgProducts/${product.thumbnail}" alt="${product.title}">
+                    <img class="card-img-top" src="/assets/products/img/${product.thumbnail}" alt="${product.title}">
                 `;
       }
 
@@ -74,10 +74,10 @@ socketClient.on("productsArray", (productsData) => {
     categoryInfo.forEach((cat) => {
       const category = cat.getAttribute("data-category");
 
-      if (category === "blanca") {
-        cat.classList.add("blanca-category-card");
-      } else if (category === "negra") {
+      if (category === "negra") {
         cat.classList.add("negra-category-card");
+      } else if (category === "blanca") {
+        cat.classList.add("blanca-category-card");
       }
     });
   } else {
@@ -105,6 +105,7 @@ addProductForm.addEventListener("submit", (e) => {
         : value;
   }
 
+  jsonData.thumbnail = formData.thumbnail || "noImgProduct-product.jpg";
   jsonData.owner = userId;
 
   socketClient.emit("addProduct", jsonData);

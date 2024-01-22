@@ -6,9 +6,9 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.1",
     info: {
-      title: "Documentación API de app Sabores verdes - Proyecto backend",
+      title: "Documentación API de app Juicy Boy - Proyecto backend",
       version: "1.0.0",
-      description: "Definición de endpoints para la API de Sabores verdes",
+      description: "Definición de endpoints para la API de Juicy Boy",
     },
   },
   apis: [`${path.join(__dirname, "/docs/**/*.yaml")}`],

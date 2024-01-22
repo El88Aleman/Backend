@@ -8,12 +8,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       const response = await fetch(`/api/carts/${cartId}`);
 
       if (!response.ok) {
-        throw error;
+        throw new Error("Error al obtener el carrito");
       }
 
       const data = await response.json();
 
-      const totalProductsInCart = data.data.products.reduce(
+      const totalProductsInCart = data.cart.products.reduce(
         (acc, product) => acc + product.quantity,
         0
       );

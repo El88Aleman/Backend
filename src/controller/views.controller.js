@@ -28,7 +28,7 @@ export class ViewsController {
       res.render("home", {
         productsNoFilter,
         userInfoDto,
-        title: "Juicy Boy - Uruguay",
+        title: "Juicy Boy",
       });
     } catch (error) {
       next(error);
@@ -123,7 +123,7 @@ export class ViewsController {
               )
             : baseUrl.concat(`?page=${products.nextPage}`)
           : null,
-        title: "Menú - Juicy Boy",
+        title: "Juicy Boy",
       };
 
       const userInfoDto = new GetUserInfoDto(req.user);
@@ -192,7 +192,7 @@ export class ViewsController {
         cart,
         totalPrice,
         userInfoDto,
-        title: "Carrito - Juicy Boy",
+        title: "CarriJuicy Boy",
       });
     } catch (error) {
       next(error);
@@ -240,7 +240,15 @@ export class ViewsController {
   static renderProfile = async (req, res) => {
     try {
       const userInfoDto = new GetUserInfoDto(req.user);
-      res.render("profile", { userInfoDto, title: "Perfil - Juicy Boy" });
+      const userFirstName = req.user.first_name;
+      const userLastName = req.user.last_name;
+
+      res.render("profile", {
+        userInfoDto,
+        userFirstName,
+        userLastName,
+        title: "Perfil - Juicy Boy",
+      });
     } catch (error) {
       res.json({ status: "error", error: "Error al obtener el perfil" });
     }

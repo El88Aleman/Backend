@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { uploader } from "../utils.js";
+import { uploadProducts } from "../utils.js";
 import {
   noSessionMiddleware,
   checkRoleMiddleware,
@@ -20,18 +20,18 @@ router.get("/:pid", noSessionMiddleware, ProductsController.getProductById);
 // Agregar un producto (POST: http://localhost:8080/api/products)
 router.post(
   "/",
-  uploader.single("thumbnail"),
   noSessionMiddleware,
   checkRoleMiddleware(["admin", "premium"]),
+  uploadProducts.single("thumbnail"),
   ProductsController.addProduct
 );
 
 // Actualizar un producto (PUT: http://localhost:8080/api/products/pid)
 router.put(
   "/:pid",
-  uploader.single("thumbnail"),
   noSessionMiddleware,
   checkRoleMiddleware(["admin", "premium"]),
+  uploadProducts.single("thumbnail"),
   ProductsController.updateProduct
 );
 

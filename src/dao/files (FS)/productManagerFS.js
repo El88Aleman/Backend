@@ -48,8 +48,8 @@ export class ProductManagerFS {
           typeof productInfo.stock !== "number" ||
           !productInfo.category ||
           typeof productInfo.category !== "string" ||
-          (productInfo.category !== "blanca" &&
-            productInfo.category !== "negra") ||
+          (productInfo.category !== "negra" &&
+            productInfo.category !== "blanca") ||
           (productInfo.thumbnail && typeof productInfo.thumbnail !== "string")
         ) {
           throw new Error(
@@ -153,8 +153,8 @@ export class ProductManagerFS {
                 typeof updateFields.stock !== "number")) ||
             (updateFields.category &&
               (typeof updateFields.category !== "string" ||
-                (updateFields.category !== "blanca" &&
-                  updateFields.category !== "negra"))) ||
+                (updateFields.category !== "negra" &&
+                  updateFields.category !== "blanca"))) ||
             (updateFields.thumbnail &&
               typeof updateFields.thumbnail !== "string")
           ) {
