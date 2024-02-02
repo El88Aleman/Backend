@@ -164,20 +164,17 @@ export class CartManagerDB {
   async deleteProductInCart(cartId, productId) {
     try {
       const cart = await this.getCartById(cartId);
-      const productInCart = cart.products.find(
-        (product) => product.product._id == productId
+      const updatedProducts = cart.products.filter(
+        (product) => product.product._id.toString() !== productId
       );
 
-      if (productInCart) {
-        const newProducts = cart.products.filter(
-          (product) => product.product._id != productId
-        );
+      cart.products = updatedProducts;
 
-        cart.products = newProducts;
+      const result = await this.model.findByIdAndUpdate(cartId, cart, {
+        new: true,
+      });
 
-        const result = await this.model.findByIdAndUpdate(cartId, cart, {
-          new: true,
-        });
+      if (result) {
         return result;
       } else {
         throw error;
@@ -188,6 +185,24 @@ export class CartManagerDB {
       );
       throw new Error(
         `delete product in cart error: Error al eliminar el producto del carrito: ${error}`
+      );
+    }
+  }
+
+  // Eliminar un carrito
+  async deleteCart(cartId) {
+    try {
+      const result = await this.model.findByIdAndDelete(cartId);
+
+      if (!result) {
+        throw error;
+      }
+
+      return result;
+    } catch (error) {
+      logger.error(`delete cart error: Error al eliminar el carrito: ${error}`);
+      throw new Error(
+        `delete cart error: Error al eliminar el carrito: ${error}`
       );
     }
   }

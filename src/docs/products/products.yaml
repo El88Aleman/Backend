@@ -182,7 +182,7 @@ paths:
             $type: string
       responses:
         "200":
-          description: Se obtuvo el producto por Id con éxito
+          description: Se eliminó el producto con éxito
           content:
             application/json:
               schema:
@@ -232,7 +232,7 @@ components:
           description: Stock del producto (mínimo 0)
         category:
           type: string
-          description: Categoría del producto ("vegano", "vegetariano")
+          description: Categoría del producto ("blanca", "negra")
         thumbnail:
           type: string
           description: Imagen del producto
@@ -242,13 +242,13 @@ components:
           description: Id del propietario del producto (generado por la base de datos)
       example:
         _id: fvdff34534t54t45t
-        title: Remera Oversize Abstract
-        description: [Oversize]
+        title: Papas fritas con cheddar
+        description: [Papa, Queso Cheddar, Cebolla de verdeo]
         code: vdg54yh
-        price: 8900
-        stock: 15
-        category: negra
-        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg
+        price: 200
+        stock: 40
+        category: vegetariano
+        thumbnail: vegg1-product-item-9.jpg
         owner: hjsg892778234sde32
 
     AddProductSuccess:
@@ -259,20 +259,20 @@ components:
         message:
           type: string
         addedProduct:
-          $ref: "#components/schemas/product"
+          $ref: "#components/schemas/Product"
       example:
         status: success
         message: Producto creado
         addedProduct:
           _id: fvdff34534t54t45t
-        title: Remera Oversize Abstract
-        description: [Oversize]
-        code: vdg54yh
-        price: 8900
-        stock: 15
-        category: negra
-        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg
-        owner: hjsg892778234sde32
+          title: Papas fritas con cheddar
+          description: [Papa, Queso Cheddar, Cebolla de verdeo]
+          code: vdg54yh
+          price: 200
+          stock: 40
+          category: vegetariano
+          thumbnail: vegg1-product-item-9.jpg
+          owner: hjsg892778234sde32
 
     UpdateProductSuccess:
       type: object
@@ -282,20 +282,20 @@ components:
         message:
           type: string
         updatedProduct:
-          $ref: "#components/schemas/product"
+          $ref: "#components/schemas/Product"
       example:
         status: success
         message: Producto actualizado
         updatedProduct:
           _id: fvdff34534t54t45t
-        title: Remera Oversize Abstract
-        description: [Oversize]
-        code: vdg54yh
-        price: 8900
-        stock: 15
-        category: negra
-        thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689165599/stvmpaxt627xr6qx7qla.jpg
-        owner: hjsg892778234sde32
+          title: Papas fritas con cheddar
+          description: [Papa, Queso Cheddar, Cebolla de verdeo]
+          code: vdg54yh
+          price: 200
+          stock: 40
+          category: vegetariano
+          thumbnail: vegg1-product-item-9.jpg
+          owner: hjsg892778234sde32
 
     DeleteProductSuccess:
       type: object
@@ -305,7 +305,7 @@ components:
         message:
           type: string
         deletedProduct:
-          $ref: "#components/schemas/product"
+          $ref: "#components/schemas/Product"
       example:
         status: success
         message: Producto eliminado

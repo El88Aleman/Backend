@@ -1,7 +1,7 @@
 paths:
   /api/carts:
     get:
-      summary: Obtener todos los carritos (Iniciar sesión)
+      summary: Obtener todos los carritos (Iniciar sesión con admin)
       tags:
         - Carritos
       responses:
@@ -304,7 +304,7 @@ paths:
 
   /api/carts/tickets:
     get:
-      summary: Obtener todos los tickets de compra (Iniciar sesión)
+      summary: Obtener todos los tickets de compra (Iniciar sesión con admin)
       tags:
         - Carritos
       responses:
@@ -465,15 +465,15 @@ components:
         products:
           - product:
               _id: fvdff34534t54t45t
-              title: Papas fritas con cheddar
-              description: [Papa, Queso Cheddar, Cebolla de verdeo]
+              title: Remera Oversize The Rose
+              description: [Oversize]
               code: vdg54yh
-              price: 200
-              stock: 40
-              category: vegetariano
-              thumbnail: vegg1-product-item-9.jpg
+              price: 8900
+              stock: 20
+              category: blanca
+              thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167338/hr38owfqdmugljsm9vet.jpg
               owner: hjsg892778234sde32
-            quantity: 1
+            quantity: 5
 
     CreateCartSuccess:
       type: object
@@ -509,7 +509,7 @@ components:
         message:
           type: string
         addedProductToCart:
-          $ref: "#components/schemas/cart"
+          $ref: "#components/schemas/Cart"
       example:
         status: success
         message: Producto agregado al carrito
@@ -527,7 +527,7 @@ components:
         message:
           type: string
         updatedProductsInCart:
-          $ref: "#components/schemas/cart"
+          $ref: "#components/schemas/Cart"
       example:
         status: success
         message: Productos en el carrito actualizados
@@ -545,7 +545,7 @@ components:
         message:
           type: string
         updatedQuantityProductInCart:
-          $ref: "#components/schemas/cart"
+          $ref: "#components/schemas/Cart"
       example:
         status: success
         message: Cantidad del producto actualizada
@@ -563,7 +563,7 @@ components:
         message:
           type: string
         emptyNewCart:
-          $ref: "#components/schemas/cart"
+          $ref: "#components/schemas/Cart"
       example:
         status: success
         message: Carrito vaciado
@@ -579,7 +579,7 @@ components:
         message:
           type: string
         newCart:
-          $ref: "#components/schemas/cart"
+          $ref: "#components/schemas/Cart"
       example:
         status: success
         message: Producto eliminado del carrito
@@ -609,13 +609,13 @@ components:
         purchase_products:
           type: array
           items:
-            $ref: "#components/schemas/cart/properties/products"
+            $ref: "#components/schemas/Cart/properties/products"
       example:
         _id: vnejnvi3j345435
         code: vmk4r3-44343-fe343
         purchase_datetime: 2024-01-17T19:52:02.623+00:00
         amount: 1000
-        purchaser: francobertone10@gmail.com
+          purchaser: francobertone10@gmail.com
         purchase_products:
           - product:
               _id: fvdff34534t54t45t
@@ -639,9 +639,9 @@ components:
         error:
           type: string
         productsRejectedInCart:
-          $ref: "#components/schemas/cart"
+          $ref: "#components/schemas/Cart"
         newPurchase:
-          $ref: "#components/schemas/ticket"
+          $ref: "#components/schemas/Ticket"
       example:
         status: success
         message: Compra realizada
@@ -656,19 +656,19 @@ components:
           code: vmk4r3-44343-fe343
           purchase_datetime: 2024-01-17T19:52:02.623+00:00
           amount: 1000
-          purchaser: francobertone10@gmail.com
-          purchase_products:
-            - product:
-                _id: fvdff34534t54t45t
-                title: Remera Oversize Pounding Heart
-                description: [Oversize]
-                code: vdg54yh
-                price: 8900
-                stock: 15
-                category: blanca
-                thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167337/bvnl2bcipgsa4fjyzplc.jpg
-                owner: hjsg892778234sde32
-              quantity: 5
+            purchaser: francobertone10@gmail.com
+        purchase_products:
+          - product:
+              _id: fvdff34534t54t45t
+              title: Remera Oversize The Rose
+              description: [Oversize]
+              code: vdg54yh
+              price: 8900
+              stock: 20
+              category: blanca
+              thumbnail: https://res.cloudinary.com/dfcnmxndf/image/upload/v1689167338/hr38owfqdmugljsm9vet.jpg
+              owner: hjsg892778234sde32
+            quantity: 5
 
     ErrorMessage:
       type: object
@@ -710,3 +710,5 @@ components:
         newProducts:
           - product: vjrenn8943834fv
             quantity: 1
+
+          

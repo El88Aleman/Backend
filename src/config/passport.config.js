@@ -64,7 +64,13 @@ export const initializePassport = () => {
       {
         clientID: config.github.clientId,
         clientSecret: config.github.clientSecret,
-        callbackURL: `http://localhost:8080/api/sessions${config.github.callbackUrl}`,
+        callbackURL:
+          config.server.envMode === "development"
+            ? `http://localhost:8080/api/sessions${config.github.callbackUrl}`
+            : config.server.envMode === "production" &&
+              config.server.port === 3000
+            ? `http://localhost:3000/api/sessions${config.github.callbackUrl}`
+            : `https://sabores-verdes-proyecto-backend.up.railway.app/login/api/sessions${config.github.callbackUrl}`,
       },
 
       async (accessToken, refreshToken, profile, done) => {
@@ -134,7 +140,11 @@ export const initializePassport = () => {
 
   // Deserialización
   passport.deserializeUser(async (id, done) => {
-    const user = await UsersService.getUserById(id);
-    done(null, user);
+    try {
+      const user = await UsersService.getUserById(id);
+      done(null, user);
+    } catch (error) {
+      done(error, null);
+    }
   });
 };

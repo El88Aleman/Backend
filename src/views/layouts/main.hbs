@@ -54,24 +54,27 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto mx-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/">HOME</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/realTimeProducts">REAL TIME PRODUCTS</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/products">PRODUCTS PAGINATE</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/signup">REGISTRARSE</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/login">INICIAR SESIÓN</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/profile">PERFIL</a>
-            </li>
+            {{#if userInfoDto}}
+              <li class="nav-item">
+                <a class="nav-link" href="/products">MENÚ</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/realTimeProducts">MIS PRODUCTOS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin/users-info">USUARIOS</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profile">PERFIL</a>
+              </li>
+            {{else}}
+              <li class="nav-item">
+                <a class="nav-link" href="/signup">REGISTRARSE</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">INICIAR SESIÓN</a>
+              </li>
+            {{/if}}
           </ul>
         </div>
       </div>

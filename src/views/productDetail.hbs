@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-detail">
                 {{#if product.thumbnail}}
-                    <img class="img-card-detail card-img" src="/assets/imgProducts/{{product.thumbnail}}" alt="{{product.title}}">
+                    <img class="img-card-detail card-img" src="/assets/products/img/{{product.thumbnail}}" alt="{{product.title}}">
                 {{/if}}
                 <div class="body-card-detail">
                     <h1 class="title-card-detail card-title">{{product.title}}</h1>
@@ -12,11 +12,18 @@
                         {{product.category}}
                     </p>
                     <p class="stock-card-detail">{{product.stock}} disponibles</p>
-                    <button class="btn-add-to-cart btn btn-primary" data-product-id="{{product._id}}">Agregar al carrito</button>
+                    <div class="d-flex flex-row">
+                        <div class="count-container">
+                            <button class="count-product-detail btn-count">-</button>
+                            <span class="count-quantity-product-detail count-content">1</span>
+                            <button class="count-product-detail btn-count">+</button>
+                        </div>
+                        <button class="btn-add-to-cart btn btn-primary" data-product-id="{{product._id}}" data-product-title="{{product.title}}" data-product-owner="{{product.owner}}" data-cart-id="{{userInfoDto.cart}}" data-user-role="{{userInfoDto.role}}" data-user-id="{{userInfoDto._id}}">Agregar al carrito</button>     
+                    </div>
                 </div>
             </div>
             <div>
-                <h6 class="subtitle-card-detail card-subtitle">COLOR</h2>
+                <h6 class="subtitle-card-detail card-subtitle">INGREDIENTES</h2>
                 <ul class="info-card-detail">
                     {{#each product.description}}
                         <li>{{this}}</li>

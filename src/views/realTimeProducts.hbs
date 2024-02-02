@@ -1,10 +1,17 @@
 <div class="app-content container">
-  <h2 class="title-category">AGREGAR PRODUCTOS: se agrega a la vista pero no a
-    mongo :(</h2>
+  <h2 class="title-category">AGREGAR PRODUCTOS</h2>
 
   <!-- Formulario para agregar productos -->
   <div class="form-add-product-container">
-    <form id="addProductForm" enctype="multipart/form-data" class="row mb-5">
+    <form
+      method="post"
+      action="/api/products"
+      enctype="multipart/form-data"
+      id="addProductForm"
+      class="row mb-5"
+      data-user-id="{{userInfoDto._id}}"
+      data-user-role="{{userInfoDto.role}}"
+    >
       <div class="col-md-6 col-12">
         <div class="mb-3">
           <label for="title" class="form-label">Título</label>
@@ -17,11 +24,11 @@
           />
         </div>
         <div class="mb-3">
-          <label for="description" class="form-label">Descripción </label>
+          <label for="description" class="form-label">Descripción</label>
           <input
             type="text"
             name="description"
-            placeholder="estilo"
+            placeholder="Ingredientes"
             id="description"
             class="form-control"
           />
@@ -61,12 +68,12 @@
         <div class="mb-3">
           <label for="category" class="form-label">Categoría</label>
           <select name="category" class="form-select" id="category">
-            <option value="blanca">blanca</option>
             <option value="negra">negra</option>
+            <option value="blanca">blanca</option>
           </select>
         </div>
         <div class="mb-3">
-          <label for="thumbnail" class="form-label">Imagen (NO FUNCIONA)</label>
+          <label for="thumbnail" class="form-label">Imagen</label>
           <input
             type="file"
             name="thumbnail"
@@ -80,9 +87,75 @@
       </div>
     </form>
   </div>
+
   <!-- Productos -->
-  <div id="cardProductsContainer"></div>
+  <div
+    id="card-products-container"
+    data-user-id="{{userInfoDto._id}}"
+    data-user-role="{{userInfoDto.role}}"
+  ></div>
+
+  {{! Formulario para actualizar productos }}
+  <div id="update-product-form-container" class="d-none">
+    <form
+      enctype="multipart/form-data"
+      id="update-product-form"
+      class="row mb-5"
+      data-user-id="{{userInfoDto._id}}"
+      data-user-role="{{userInfoDto.role}}"
+    >
+      <div class="col-md-6 col-12">
+        <div class="mb-3">
+          <label for="title" class="form-label">Título</label>
+          <input type="text" name="title" id="title" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Descripción</label>
+          <input
+            type="text"
+            name="description"
+            id="description"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="code" class="form-label">Código</label>
+          <input type="string" name="code" id="code" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Precio</label>
+          <input type="number" name="price" id="price" class="form-control" />
+        </div>
+      </div>
+      <div class="col-md-6 col-12">
+        <div class="mb-3">
+          <label for="stock" class="form-label">Stock</label>
+          <input type="number" name="stock" id="stock" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="category" class="form-label">Categoría</label>
+          <select name="category" class="form-select" id="category">
+            <option value="negra">negra</option>
+            <option value="blanca">blanca</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="thumbnail" class="form-label">Imagen</label>
+          <input
+            type="file"
+            name="thumbnail"
+            id="thumbnail"
+            class="form-control"
+          />
+        </div>
+        <div class="pt-md-4 pt-0 btn-add-product-container">
+          <button type="submit" class="btn-add-product">Guardar cambios</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
+<script type="module" src="/js/main.js"></script>
 <script type="module" src="/js/realTimeProducts.js"></script>

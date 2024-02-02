@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
     required: function () {
       return !this.github_user;
     },
+    min: 0,
   },
   password: {
     type: String,

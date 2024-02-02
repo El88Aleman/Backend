@@ -95,4 +95,37 @@ export class UserManagerDB {
       );
     }
   }
+
+  // Eliminar un usuario
+  async deleteUser(userId) {
+    try {
+      const result = await this.model.findByIdAndDelete(userId);
+
+      if (!result) {
+        throw error;
+      }
+
+      return result;
+    } catch (error) {
+      logger.error(`delete user error: Error al eliminar el usuario: ${error}`);
+      throw new Error(
+        `delete user error: Error al eliminar el usuario: ${error}`
+      );
+    }
+  }
+
+  //Eliminar usuarios inactivos
+  async deleteInactiveUsers(lastConnection) {
+    try {
+      const result = await this.model.find(lastConnection).lean();
+      return result;
+    } catch (error) {
+      logger.error(
+        `delete inactive users error: Error al eliminar los usuarios inactivos: ${error}`
+      );
+      throw new Error(
+        `delete inactive users error: Error al eliminar los usuarios inactivos: ${error}`
+      );
+    }
+  }
 }
